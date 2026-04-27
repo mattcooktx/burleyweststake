@@ -1,0 +1,323 @@
+backend:
+  name: git-gateway
+  branch: main
+  commit_messages:
+    create: 'CMS: create {{collection}} "{{slug}}"'
+    update: 'CMS: update {{collection}} "{{slug}}"'
+    delete: 'CMS: delete {{collection}} "{{slug}}"'
+    uploadMedia: 'CMS: upload {{path}}'
+    deleteMedia: 'CMS: delete {{path}}'
+
+# Default media folder for one-off uploads (rare). Per-campaign media is
+# configured below on the Campaigns collection itself so images and PDFs
+# land next to their owning campaign.
+media_folder: public/uploads
+public_folder: /uploads
+
+publish_mode: simple
+
+site_url: https://burleyweststake.com
+display_url: https://burleyweststake.com
+logo_url: /favicon.svg
+
+collections:
+  # ============================================================
+  # CAMPAIGNS — the main content type. One folder per campaign with
+  # an index.md and co-located images/ and pdfs/ subfolders.
+  # ============================================================
+  - name: campaigns
+    label: Campaigns
+    label_singular: Campaign
+    description: 'Stake conferences, Holy Week, Christmas, and other seasonal campaigns.'
+    folder: src/content/campaigns
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    identifier_field: title
+    summary: '{{title}} — {{start_date | date("MMMM YYYY")}}'
+    fields:
+      - { label: 'Title', name: title, widget: string }
+      - {
+          label: 'URL slug',
+          name: slug,
+          widget: string,
+          hint: 'Used in the page URL. Lowercase letters and hyphens only. Example: april-2026-stake-conference',
+        }
+      - label: 'Category'
+        name: category
+        widget: select
+        options:
+          - { label: 'Stake Conference', value: stake-conference }
+          - { label: 'Holy Week', value: holy-week }
+          - { label: 'Christmas', value: christmas }
+          - { label: 'Temple Celebration', value: temple-celebration }
+          - { label: 'Youth Conference', value: youth-conference }
+          - { label: 'Other', value: other }
+      - {
+          label: 'Start date',
+          name: start_date,
+          widget: date,
+          hint: 'When this campaign should start showing on the homepage.',
+        }
+      - {
+          label: 'End date',
+          name: end_date,
+          widget: date,
+          hint: 'When this campaign should stop being the homepage feature.',
+        }
+      - { label: 'Hero eyebrow', name: hero_eyebrow, widget: string, required: false, hint: 'Small label above the headline. Example: "Stake Conference Recap"' }
+      - { label: 'Hero headline', name: hero_headline, widget: string }
+      - { label: 'Hero subhead', name: hero_subhead, widget: text, required: false }
+      - {
+          label: 'Hero image',
+          name: hero_image,
+          widget: image,
+          required: false,
+          media_folder: 'images',
+          public_folder: './images',
+        }
+      - { label: 'Hero image alt text', name: hero_image_alt, widget: string, required: false }
+
+      - label: 'Featured scripture'
+        name: featured_scripture
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: 'Quote', name: text, widget: text }
+          - { label: 'Reference', name: reference, widget: string, hint: 'Example: 2 Nephi 32:3' }
+
+      - label: 'Sessions & talks'
+        name: talks
+        widget: list
+        required: false
+        summary: '{{fields.session}} — {{fields.session_date}}'
+        fields:
+          - { label: 'Session name', name: session, widget: string, hint: 'Example: "General Session"' }
+          - { label: 'Session date label', name: session_date, widget: string, hint: 'Free-form. Example: "Sunday · April 19"' }
+          - {
+              label: 'Display order',
+              name: session_order,
+              widget: number,
+              value_type: int,
+              default: 1,
+              hint: 'Sessions display in ascending order by this number.',
+            }
+          - label: 'Talks in this session'
+            name: items
+            widget: list
+            summary: '{{fields.title}} — {{fields.speaker}}'
+            fields:
+              - { label: 'Title', name: title, widget: string }
+              - { label: 'Speaker', name: speaker, widget: string }
+              - { label: 'Summary', name: summary, widget: text }
+              - {
+                  label: 'PDF',
+                  name: pdf,
+                  widget: file,
+                  required: false,
+                  media_folder: 'pdfs',
+                  public_folder: './pdfs',
+                  hint: 'Upload the talk PDF. Preferred over external link.',
+                }
+              - {
+                  label: 'External link (fallback only)',
+                  name: link_url,
+                  widget: string,
+                  required: false,
+                  hint: 'Use ONLY when there is no PDF (e.g., a YouTube recording).',
+                }
+              - {
+                  label: 'Featured talk?',
+                  name: featured,
+                  widget: boolean,
+                  default: false,
+                  hint: 'Featured talks render as the prominent large card with the gold accent rule.',
+                }
+
+      - label: 'Photo gallery'
+        name: photo_gallery
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: 'Section title', name: title, widget: string, default: 'Photos from the Linger Longer' }
+          - { label: 'Section subhead', name: meta, widget: string, required: false, hint: 'Example: "After the Sunday Session"' }
+          - label: 'Photos'
+            name: photos
+            widget: list
+            summary: '{{fields.alt}}'
+            fields:
+              - {
+                  label: 'Photo',
+                  name: file,
+                  widget: image,
+                  media_folder: 'images',
+                  public_folder: './images',
+                }
+              - { label: 'Alt text (description)', name: alt, widget: string }
+              - {
+                  label: 'Featured tile position (1–4)',
+                  name: featured_position,
+                  widget: number,
+                  value_type: int,
+                  required: false,
+                  min: 1,
+                  max: 4,
+                  hint: '1 = big tile on the left, 2–4 = small tiles on the right. Leave empty for gallery-only.',
+                }
+
+      - label: 'Instagram post (optional)'
+        name: social_post
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - label: 'Platform'
+            name: platform
+            widget: select
+            options: [instagram, facebook]
+            default: instagram
+          - { label: 'Post URL', name: post_url, widget: string }
+          - {
+              label: 'Preview image',
+              name: preview_image,
+              widget: image,
+              required: false,
+              media_folder: 'images',
+              public_folder: './images',
+              hint: 'Optional. If left blank, the featured scripture quote will be shown on a styled gradient.',
+            }
+          - { label: 'Caption', name: caption, widget: text }
+          - { label: 'Posted at', name: posted_at, widget: datetime }
+
+      - {
+          label: 'Draft (hide from site)',
+          name: draft,
+          widget: boolean,
+          default: false,
+          required: false,
+          hint: 'Check to keep this campaign hidden until ready.',
+        }
+
+  # ============================================================
+  # SITE SETTINGS — single file, edited as a form.
+  # ============================================================
+  - name: site
+    label: Site Settings
+    description: 'Brand text, leadership, wards, contact info, resource links.'
+    files:
+      - file: src/content/site.yaml
+        name: site
+        label: Site Settings
+        fields:
+          - label: 'Brand'
+            name: brand
+            widget: object
+            fields:
+              - { label: 'Pre-name eyebrow', name: pre, widget: string }
+              - { label: 'Full name', name: name, widget: string }
+              - { label: 'Short name', name: short_name, widget: string }
+          - { label: 'Site description', name: description, widget: text }
+          - label: 'Social'
+            name: social
+            widget: object
+            fields:
+              - { label: 'Facebook URL', name: facebook, widget: string }
+              - { label: 'Instagram URL', name: instagram, widget: string }
+          - label: 'Office'
+            name: office
+            widget: object
+            fields:
+              - { label: 'Address line 1', name: address_line_1, widget: string }
+              - { label: 'Address line 2', name: address_line_2, widget: string }
+              - { label: 'Email', name: email, widget: string }
+          - label: 'Stake Presidency'
+            name: presidency
+            widget: list
+            summary: '{{fields.name}} — {{fields.role}}'
+            fields:
+              - { label: 'Name', name: name, widget: string }
+              - { label: 'Role', name: role, widget: string }
+          - label: 'Wards'
+            name: wards
+            widget: list
+            summary: '{{fields.name}}'
+            fields:
+              - { label: 'Ward name', name: name, widget: string }
+              - { label: 'Member Tools URL', name: url, widget: string }
+          - label: 'Resources (homepage tiles)'
+            name: resources
+            widget: list
+            summary: '{{fields.name}}'
+            fields:
+              - { label: 'Name', name: name, widget: string }
+              - { label: 'One-line description', name: description, widget: string }
+              - { label: 'URL', name: url, widget: string }
+              - label: 'Icon'
+                name: icon
+                widget: select
+                options:
+                  - { label: 'Calendar', value: calendar }
+                  - { label: 'Book', value: book }
+                  - { label: 'Video', value: video }
+                  - { label: 'Layers', value: layers }
+                  - { label: 'Briefcase', value: briefcase }
+                  - { label: 'Map pin', value: 'map-pin' }
+
+  # ============================================================
+  # CATEGORIES — single keyed YAML; edit names and descriptions.
+  # ============================================================
+  - name: categories
+    label: Categories
+    description: 'Display names, descriptions, and ordering for collection categories.'
+    files:
+      - file: src/content/categories.yaml
+        name: categories
+        label: Categories
+        fields:
+          - label: 'Stake Conference'
+            name: stake-conference
+            widget: object
+            fields:
+              - { label: 'Display name', name: name, widget: string }
+              - { label: 'Description', name: description, widget: text }
+              - { label: 'Display order', name: display_order, widget: number, value_type: int }
+          - label: 'Holy Week'
+            name: holy-week
+            widget: object
+            fields:
+              - { label: 'Display name', name: name, widget: string }
+              - { label: 'Description', name: description, widget: text }
+              - { label: 'Display order', name: display_order, widget: number, value_type: int }
+          - label: 'Christmas'
+            name: christmas
+            widget: object
+            fields:
+              - { label: 'Display name', name: name, widget: string }
+              - { label: 'Description', name: description, widget: text }
+              - { label: 'Display order', name: display_order, widget: number, value_type: int }
+          - label: 'Temple Celebration'
+            name: temple-celebration
+            widget: object
+            fields:
+              - { label: 'Display name', name: name, widget: string }
+              - { label: 'Description', name: description, widget: text }
+              - { label: 'Display order', name: display_order, widget: number, value_type: int }
+          - label: 'Youth Conference'
+            name: youth-conference
+            widget: object
+            fields:
+              - { label: 'Display name', name: name, widget: string }
+              - { label: 'Description', name: description, widget: text }
+              - { label: 'Display order', name: display_order, widget: number, value_type: int }
+          - label: 'Other'
+            name: other
+            widget: object
+            fields:
+              - { label: 'Display name', name: name, widget: string }
+              - { label: 'Description', name: description, widget: text }
+              - { label: 'Display order', name: display_order, widget: number, value_type: int }

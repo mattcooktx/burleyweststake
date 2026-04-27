@@ -44,6 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString()
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
     <meta name="twitter:card" content="summary_large_image" />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -52,5 +53,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString()
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      // Redirect users from confirmation/recovery email links straight into /admin/.
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/'
+            })
+          }
+        })
+      }
+    </script>
   </body>
 </html>
