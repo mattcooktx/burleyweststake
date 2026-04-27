@@ -1,0 +1,29 @@
+stake-conference:
+  name: "Stake Conference"
+  description: "Twice-yearly gatherings. Talks, presentations, and recordings since 2024."
+  display_order: 1
+
+holy-week:
+  name: "Holy Week"
+  description: "Daily reflections through Passion Week, beginning Palm Sunday."
+  display_order: 2
+
+christmas:
+  name: "Christmas"
+  description: "Christmas devotionals and seasonal video messages."
+  display_order: 3
+
+temple-celebration:
+  name: "Temple Celebration"
+  description: "Memories from the dedication of the Burley Idaho Temple."
+  display_order: 4
+
+youth-conference:
+  name: "Youth Conference"
+  description: "Annual youth gatherings and trek experiences."
+  display_order: 5
+
+other:
+  name: "Other"
+  description: "Special events and one-time gatherings."
+  display_order: 99
