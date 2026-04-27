@@ -1,77 +1,61 @@
 ---
-const title = 'Burley Idaho West Stake'
-const description =
-  'A community of saints in southern Idaho — seven wards gathered around the Burley Idaho Temple.'
+import Base from '../layouts/Base.astro'
+import { getActiveCampaign } from '../lib/campaigns'
+
+const active = await getActiveCampaign()
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
-    <title>{title}</title>
-  </head>
-  <body>
-    <main>
-      <p class="eyebrow">The Church of Jesus Christ of Latter-day Saints</p>
-      <h1>{title}</h1>
-      <p class="sub">{description}</p>
-      <p class="placeholder">Site coming soon.</p>
-    </main>
+<Base current="home" title={active?.data.title}>
+  <section class="placeholder-section">
+    <p class="eyebrow">Coming in Epic 4</p>
+    <h1>Hero, talks, photos, scripture, Instagram, and resources will render here.</h1>
+    {
+      active && (
+        <p class="meta">
+          Active campaign resolved: <strong>{active.data.title}</strong> ({active.id})
+        </p>
+      )
+    }
+  </section>
 
-    <style>
-      :root {
-        --bg: #f5f0e6;
-        --ink: #2c2418;
-        --ink-soft: #6b5d47;
-        --ink-faint: #a0917a;
-        --accent: #8b6f3f;
+  <style>
+    .placeholder-section {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 80px 56px;
+      text-align: center;
+    }
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .placeholder-section h1 {
+      font-family: var(--serif-display);
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--ink);
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.25;
+    }
+    .meta {
+      font-family: var(--sans);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+      margin-top: 24px;
+    }
+    @media (max-width: 900px) {
+      .placeholder-section {
+        padding: 48px 24px;
       }
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--ink);
-        font-family: 'Lora', Georgia, serif;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 24px;
+      .placeholder-section h1 {
+        font-size: 24px;
       }
-      main {
-        max-width: 540px;
-        text-align: center;
-      }
-      .eyebrow {
-        font-family: system-ui, sans-serif;
-        font-size: 11px;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-        margin: 0 0 16px;
-      }
-      h1 {
-        font-family: 'Cormorant Garamond', Georgia, serif;
-        font-size: 48px;
-        font-weight: 500;
-        margin: 0 0 16px;
-        line-height: 1.1;
-      }
-      .sub {
-        font-size: 16px;
-        line-height: 1.65;
-        color: var(--ink-soft);
-        margin: 0 0 32px;
-      }
-      .placeholder {
-        font-family: system-ui, sans-serif;
-        font-size: 11px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin: 0;
-      }
-    </style>
-  </body>
-</html>
+    }
+  </style>
+</Base>

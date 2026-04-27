@@ -1,0 +1,367 @@
+/* ============================================================
+   DESIGN TOKENS — Reverent Stone palette, ported from v4 prototype
+   ============================================================ */
+:root {
+  --bg: #f5f0e6;
+  --paper: #faf6ec;
+  --paper-soft: #f0e8d6;
+  --ink: #2c2418;
+  --ink-soft: #6b5d47;
+  --ink-faint: #a0917a;
+  --ink-whisper: #c4b89e;
+  --accent: #8b6f3f;
+  --accent-deep: #5c4824;
+  --accent-light: #b89968;
+  --rule: #d8cdb8;
+  --rule-soft: #e6dcc4;
+
+  --serif-display: 'Cormorant Garamond', Georgia, serif;
+  --serif-body: 'Lora', Georgia, serif;
+  --sans: 'Manrope', system-ui, sans-serif;
+
+  --content-max: 1320px;
+  --section-pad-x: 56px;
+  --section-pad-x-mobile: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif-body);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  border-bottom: 1px solid var(--rule);
+  padding: 18px var(--section-pad-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(250, 246, 236, 0.92);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand-pre {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.brand-name {
+  font-family: var(--serif-display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.nav-list {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+.nav-list a {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 500;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+.nav-list a:hover,
+.nav-list a.active {
+  color: var(--accent-deep);
+  border-bottom-color: var(--accent);
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  padding-left: 24px;
+  border-left: 1px solid var(--rule);
+}
+.social-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.social-icon:hover {
+  color: var(--accent-deep);
+  border-color: var(--accent);
+  background: var(--paper-soft);
+}
+.social-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 14px 26px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  background: var(--accent-deep);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 80px var(--section-pad-x) 40px;
+}
+
+.footer-grid {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid rgba(250, 246, 236, 0.12);
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+}
+.footer-brand-pre {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+.footer-brand-name {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--paper);
+  margin-bottom: 18px;
+  line-height: 1.1;
+}
+.footer-brand p {
+  font-family: var(--serif-body);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(250, 246, 236, 0.7);
+  max-width: 320px;
+  margin-bottom: 24px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.footer-social a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid rgba(250, 246, 236, 0.2);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+.footer-social a:hover {
+  border-color: var(--accent-light);
+  background: rgba(184, 153, 104, 0.1);
+}
+.footer-social svg {
+  width: 14px;
+  height: 14px;
+}
+
+.footer-col h4 {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+.footer-col li {
+  margin-bottom: 12px;
+  font-family: var(--serif-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(250, 246, 236, 0.85);
+}
+.footer-col li .name {
+  color: var(--paper);
+  font-style: italic;
+}
+.footer-col li .role {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: rgba(250, 246, 236, 0.5);
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+.footer-col a {
+  color: rgba(250, 246, 236, 0.85);
+  transition: color 0.2s;
+}
+.footer-col a:hover {
+  color: var(--accent-light);
+}
+
+.footer-bottom {
+  max-width: var(--content-max);
+  margin: 32px auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: rgba(250, 246, 236, 0.45);
+  letter-spacing: 0.05em;
+}
+
+.footer-bottom a:hover {
+  color: var(--accent-light);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .header {
+    padding: 16px var(--section-pad-x-mobile);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .nav {
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .nav-list {
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .social-icons {
+    padding-left: 16px;
+  }
+  .footer {
+    padding: 56px var(--section-pad-x-mobile) 32px;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   SKIP LINK (a11y)
+   ============================================================ */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 8px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 8px 16px;
+  z-index: 200;
+  font-family: var(--sans);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.skip-link:focus {
+  top: 8px;
+}
