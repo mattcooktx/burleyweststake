@@ -1,0 +1,77 @@
+---
+const title = 'Burley Idaho West Stake'
+const description =
+  'A community of saints in southern Idaho — seven wards gathered around the Burley Idaho Temple.'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">The Church of Jesus Christ of Latter-day Saints</p>
+      <h1>{title}</h1>
+      <p class="sub">{description}</p>
+      <p class="placeholder">Site coming soon.</p>
+    </main>
+
+    <style>
+      :root {
+        --bg: #f5f0e6;
+        --ink: #2c2418;
+        --ink-soft: #6b5d47;
+        --ink-faint: #a0917a;
+        --accent: #8b6f3f;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Lora', Georgia, serif;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      main {
+        max-width: 540px;
+        text-align: center;
+      }
+      .eyebrow {
+        font-family: system-ui, sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 0 0 16px;
+      }
+      h1 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 48px;
+        font-weight: 500;
+        margin: 0 0 16px;
+        line-height: 1.1;
+      }
+      .sub {
+        font-size: 16px;
+        line-height: 1.65;
+        color: var(--ink-soft);
+        margin: 0 0 32px;
+      }
+      .placeholder {
+        font-family: system-ui, sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0;
+      }
+    </style>
+  </body>
+</html>
