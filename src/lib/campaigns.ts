@@ -35,6 +35,18 @@ export function resolveTalkLink(
 
 const isPublished = (c: Campaign) => !c.data.draft
 
+export function isPlaceholder(c: Campaign, now: Date = new Date()): boolean {
+  return new Date(c.data.start_date).getTime() > now.getTime()
+}
+
+export function formatDateRange(c: Campaign): string {
+  if (isPlaceholder(c)) return 'Coming soon'
+  const fmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  const start = fmt.format(new Date(c.data.start_date))
+  const end = fmt.format(new Date(c.data.end_date))
+  return `${start} – ${end}`
+}
+
 const startMs = (c: Campaign) => new Date(c.data.start_date).getTime()
 const endMs = (c: Campaign) => new Date(c.data.end_date).getTime()
 

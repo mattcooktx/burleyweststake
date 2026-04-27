@@ -5,7 +5,7 @@ category: "youth-conference"
 start_date: 2099-01-01
 end_date: 2099-01-08
 hero_headline: "Youth Conference 2025"
-draft: true
+hero_subhead: "Annual youth gatherings and trek experiences. Real content will replace this stub."
 ---
 
 Stub campaign — placeholder so the Youth Conference collection page has at least one entry to render against.

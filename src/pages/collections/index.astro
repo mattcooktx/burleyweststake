@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro'
+import CategoryCard from '../../components/CategoryCard.astro'
+import { getAllCategories, getCampaignsByCategory } from '../../lib/campaigns'
+
+const categories = (await getAllCategories()).filter((c) => c.id !== 'other')
+
+// For each category without its own hero_image, try to grab the most-recent
+// campaign's hero so the card has a real photo.
+const enriched = await Promise.all(
+  categories.map(async (cat) => {
+    if (cat.data.hero_image) return { cat, representative: undefined }
+    const campaigns = await getCampaignsByCategory(cat.id)
+    const withHero = campaigns.find((c) => c.data.hero_image)
+    return { cat, representative: withHero?.data.hero_image }
+  }),
+)
+---
+
+<Base
+  current="collections"
+  title="Collections"
+  description="Stake content organized by season and theme."
+>
+  <header class="page-header">
+    <span class="eyebrow">Browse the Stake</span>
+    <h1><em>Collections</em></h1>
+    <p>
+      Years of stake content, organized by season and theme. Stake conferences, Holy Week,
+      Christmas, and special events &mdash; gathered in one place.
+    </p>
+  </header>
+
+  <section class="collections-overview">
+    <div class="collections-grid">
+      {enriched.map(({ cat, representative }) => (
+        <CategoryCard category={cat} representativeImage={representative} />
+      ))}
+    </div>
+  </section>
+</Base>

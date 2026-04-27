@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets'
+import { formatDateRange, isPlaceholder, type Campaign } from '../lib/campaigns'
+
+interface Props {
+  campaign: Campaign
+}
+
+const { campaign } = Astro.props
+const placeholder = isPlaceholder(campaign)
+const heroImage = campaign.data.hero_image
+const headlineWords = campaign.data.hero_headline.trim().split(' ')
+const split = Math.max(headlineWords.length - 2, 0)
+const headlineLead = headlineWords.slice(0, split).join(' ')
+const headlineEm = headlineWords.slice(split).join(' ')
+---
+
+<a href={`/campaigns/${campaign.id}/`} class="campaign-row">
+  <div class="campaign-row-image">
+    {
+      heroImage ? (
+        <Image
+          src={heroImage}
+          alt={campaign.data.hero_image_alt ?? ''}
+          widths={[400, 800]}
+          sizes="(max-width: 900px) 100vw, 320px"
+        />
+      ) : (
+        <div class="campaign-row-fallback">{campaign.data.title}</div>
+      )
+    }
+  </div>
+  <div class="campaign-row-body">
+    <div class="campaign-row-meta">{formatDateRange(campaign)}</div>
+    <h2 class="campaign-row-headline">
+      {headlineLead && <>{headlineLead} </>}<em>{headlineEm}</em>
+      {placeholder && <span class="campaign-row-coming">Coming soon</span>}
+    </h2>
+    {
+      campaign.data.hero_subhead && (
+        <p class="campaign-row-sub">{campaign.data.hero_subhead}</p>
+      )
+    }
+  </div>
+</a>

@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets'
+import type { CategoryWithCount } from '../lib/campaigns'
+
+interface Props {
+  category: CategoryWithCount
+  representativeImage?: ImageMetadata
+}
+
+const { category, representativeImage } = Astro.props
+
+const heroImage = category.data.hero_image ?? representativeImage
+const countLabel =
+  category.campaignCount === 0
+    ? 'Coming soon'
+    : `${category.campaignCount} ${category.campaignCount === 1 ? 'campaign' : 'campaigns'}`
+---
+
+<a href={`/collections/${category.id}/`} class="category-card">
+  <div class="category-card-image">
+    {
+      heroImage ? (
+        <Image
+          src={heroImage}
+          alt=""
+          widths={[600, 1000]}
+          sizes="(max-width: 900px) 100vw, 50vw"
+        />
+      ) : (
+        <div class="category-card-image-fallback">{category.data.name}</div>
+      )
+    }
+  </div>
+  <div class="category-card-body">
+    <div class="category-card-eyebrow">{countLabel}</div>
+    <h2>{category.data.name}</h2>
+    <p>{category.data.description}</p>
+  </div>
+</a>

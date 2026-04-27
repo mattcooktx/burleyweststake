@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro'
+import CampaignCard from '../../components/CampaignCard.astro'
+import { getAllCategories, getCampaignsByCategory } from '../../lib/campaigns'
+import type { GetStaticPaths } from 'astro'
+
+export const getStaticPaths = (async () => {
+  const categories = await getAllCategories()
+  return categories.map((cat) => ({
+    params: { category: cat.id },
+    props: { categoryId: cat.id, categoryName: cat.data.name, description: cat.data.description },
+  }))
+}) satisfies GetStaticPaths
+
+interface Props {
+  categoryId: string
+  categoryName: string
+  description: string
+}
+
+const { categoryId, categoryName, description } = Astro.props as Props
+const campaigns = await getCampaignsByCategory(categoryId)
+
+// Pick the right top-nav highlight for the four featured categories.
+const navMap: Record<string, 'stake-conference' | 'holy-week' | 'christmas' | 'collections'> = {
+  'stake-conference': 'stake-conference',
+  'holy-week': 'holy-week',
+  christmas: 'christmas',
+}
+const current = navMap[categoryId] ?? 'collections'
+---
+
+<Base current={current} title={categoryName} description={description}>
+  <header class="page-header">
+    <span class="eyebrow">Collection</span>
+    <h1>{categoryName}</h1>
+    <p>{description}</p>
+  </header>
+
+  <section class="category-page">
+    {campaigns.length === 0 ? (
+      <p class="empty-state">No campaigns in this collection yet. Check back soon.</p>
+    ) : (
+      <div>
+        {campaigns.map((c) => <CampaignCard campaign={c} />)}
+      </div>
+    )}
+  </section>
+</Base>
