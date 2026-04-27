@@ -1,0 +1,17 @@
+# Belt-and-suspenders redirects (mirrored from netlify.toml so they ship even
+# if a future build skips toml processing).
+
+# Old Squarespace URLs -> new equivalents
+/templecelebration            /collections/temple-celebration/  301
+/templecelebration/*          /collections/temple-celebration/  301
+/terms-and-conditions         /terms/                            301
+/terms-and-conditions/        /terms/                            301
+/holyweek                     /collections/holy-week/            301
+/holyweek/*                   /collections/holy-week/            301
+/christmas                    /collections/christmas/            301
+/christmas/*                  /collections/christmas/            301
+/stakeconference              /collections/stake-conference/     301
+/stakeconference/*            /collections/stake-conference/     301
+/youthconference              /collections/youth-conference/     301
+/youthconference/*            /collections/youth-conference/     301
+/contact                      /#footer                           301

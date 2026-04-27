@@ -23,3 +23,74 @@
   for = "/admin/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
+
+# ============================================================
+# Redirects
+# ============================================================
+
+# www -> apex (canonical = burleyweststake.com)
+[[redirects]]
+  from = "https://www.burleyweststake.com/*"
+  to = "https://burleyweststake.com/:splat"
+  status = 301
+  force = true
+
+# Old Squarespace URLs -> new equivalents
+[[redirects]]
+  from = "/templecelebration"
+  to = "/collections/temple-celebration/"
+  status = 301
+[[redirects]]
+  from = "/templecelebration/*"
+  to = "/collections/temple-celebration/"
+  status = 301
+
+[[redirects]]
+  from = "/terms-and-conditions"
+  to = "/terms/"
+  status = 301
+[[redirects]]
+  from = "/terms-and-conditions/"
+  to = "/terms/"
+  status = 301
+
+[[redirects]]
+  from = "/holyweek"
+  to = "/collections/holy-week/"
+  status = 301
+[[redirects]]
+  from = "/holyweek/*"
+  to = "/collections/holy-week/"
+  status = 301
+
+[[redirects]]
+  from = "/christmas"
+  to = "/collections/christmas/"
+  status = 301
+[[redirects]]
+  from = "/christmas/*"
+  to = "/collections/christmas/"
+  status = 301
+
+[[redirects]]
+  from = "/stakeconference"
+  to = "/collections/stake-conference/"
+  status = 301
+[[redirects]]
+  from = "/stakeconference/*"
+  to = "/collections/stake-conference/"
+  status = 301
+
+[[redirects]]
+  from = "/youthconference"
+  to = "/collections/youth-conference/"
+  status = 301
+[[redirects]]
+  from = "/youthconference/*"
+  to = "/collections/youth-conference/"
+  status = 301
+
+[[redirects]]
+  from = "/contact"
+  to = "/#footer"
+  status = 301
