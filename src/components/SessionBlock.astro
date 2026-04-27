@@ -1,0 +1,64 @@
+---
+import FeaturedTalkCard from './FeaturedTalkCard.astro'
+import TalkCard from './TalkCard.astro'
+import { resolveTalkLink } from '../lib/campaigns'
+
+interface TalkItem {
+  title: string
+  speaker: string
+  summary: string
+  pdf?: string
+  link_url?: string
+  featured: boolean
+}
+
+interface Props {
+  campaignId: string
+  session: string
+  sessionDate: string
+  items: TalkItem[]
+}
+
+const { campaignId, session, sessionDate, items } = Astro.props
+
+const featured = items.filter((it) => it.featured)
+const standard = items.filter((it) => !it.featured)
+
+const sessionWords = session.trim().split(' ')
+const firstWord = sessionWords[0]
+const restOfSession = sessionWords.slice(1).join(' ')
+---
+
+<div class="session">
+  <div class="session-label">
+    <span class="name"><em>{firstWord}</em>{restOfSession ? ` ${restOfSession}` : ''}</span>
+    <span class="date">{sessionDate}</span>
+  </div>
+
+  {
+    featured.map((item) => (
+      <FeaturedTalkCard
+        title={item.title}
+        speaker={item.speaker}
+        summary={item.summary}
+        href={resolveTalkLink(campaignId, item)}
+        meta={`${item.speaker.startsWith('President') ? 'Stake President' : 'Speaker'} · Featured`}
+      />
+    ))
+  }
+
+  {
+    standard.length > 0 && (
+      <div class="talks-grid">
+        {standard.map((item) => (
+          <TalkCard
+            title={item.title}
+            speaker={item.speaker}
+            summary={item.summary}
+            href={resolveTalkLink(campaignId, item)}
+          />
+        ))}
+      </div>
+    )
+  }
+</div>

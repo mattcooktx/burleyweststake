@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string
+  speaker: string
+  summary: string
+  href?: string
+  meta?: string
+}
+
+const { title, speaker, summary, href, meta = 'Featured' } = Astro.props
+const Tag = href ? 'a' : 'div'
+const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {}
+---
+
+<Tag class="talk-featured" {...linkAttrs}>
+  <div class="talk-meta">{meta}</div>
+  <h3>{title}</h3>
+  <div class="talk-speaker">{speaker}</div>
+  <p class="talk-summary">{summary}</p>
+  {href && <span class="talk-link">View Presentation →</span>}
+</Tag>

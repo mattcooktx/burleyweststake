@@ -1,0 +1,26 @@
+---
+import { getAllCategories } from '../lib/campaigns'
+
+const categories = (await getAllCategories()).filter((c) => c.id !== 'other')
+---
+
+<aside class="sidebar">
+  <div class="sidebar-label">Browse the Stake</div>
+  <h3>Collections</h3>
+  <p class="sidebar-intro">Years of stake content, organized by season and theme.</p>
+
+  {
+    categories.map((cat) => (
+      <a href={`/collections/${cat.id}/`} class="collection-link">
+        <span class="collection-name">{cat.data.name}</span>
+        <span class="collection-count">
+          {String(cat.campaignCount).padStart(2, '0')}
+        </span>
+      </a>
+    ))
+  }
+
+  <div class="sidebar-cta">
+    <a href="/collections/">Browse All Collections →</a>
+  </div>
+</aside>

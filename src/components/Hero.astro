@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets'
+import type { Campaign } from '../lib/campaigns'
+
+interface Props {
+  campaign: Campaign
+}
+
+const { campaign } = Astro.props
+const { hero_eyebrow, hero_headline, hero_subhead, hero_image, hero_image_alt } = campaign.data
+
+// Italicize the last two words of the headline (e.g. "April 2026 Stake Conference"
+// → "April 2026" + italic "Stake Conference") to match the prototype's emphasis pattern.
+const headlineWords = hero_headline.trim().split(' ')
+const split = Math.max(headlineWords.length - 2, 0)
+const headlineLead = headlineWords.slice(0, split).join(' ')
+const headlineEm = headlineWords.slice(split).join(' ')
+---
+
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      {
+        hero_eyebrow && (
+          <div class="hero-eyebrow">
+            <span class="pulse" />
+            {hero_eyebrow}
+          </div>
+        )
+      }
+      <h1>
+        {headlineLead && <>{headlineLead}<br /></>}<em>{headlineEm}</em>
+      </h1>
+      {hero_subhead && <p class="hero-sub">{hero_subhead}</p>}
+      <div class="hero-actions">
+        <a href="#talks" class="btn btn-primary">Talk Recaps</a>
+      </div>
+    </div>
+    {
+      hero_image && (
+        <div class="hero-image">
+          <Image
+            src={hero_image}
+            alt={hero_image_alt ?? ''}
+            widths={[640, 960, 1280, 1600]}
+            sizes="(max-width: 900px) 100vw, 50vw"
+            loading="eager"
+          />
+          <div class="hero-image-caption">Burley Idaho Temple</div>
+        </div>
+      )
+    }
+  </div>
+</section>

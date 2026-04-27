@@ -1,0 +1,24 @@
+---
+import { site } from '../lib/site'
+import Icon from './Icon.astro'
+---
+
+<section class="quick-links">
+  <div class="resources-header">
+    <h2>Resources</h2>
+    <p>The tools we use most as members of the Church.</p>
+  </div>
+  <div class="ql-grid">
+    {
+      site.resources.map((r) => (
+        <a class="ql" href={r.url} target="_blank" rel="noopener">
+          <div class="ql-icon">
+            <Icon name={r.icon} />
+          </div>
+          <div class="ql-name">{r.name}</div>
+          <div class="ql-desc">{r.description}</div>
+        </a>
+      ))
+    }
+  </div>
+</section>

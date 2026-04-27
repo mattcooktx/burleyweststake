@@ -1,0 +1,13 @@
+---
+interface Props {
+  text: string
+  reference: string
+}
+
+const { text, reference } = Astro.props
+---
+
+<section class="scripture-band">
+  <blockquote>{`"${text.replace(/^["']|["']$/g, '')}"`}</blockquote>
+  <cite>— {reference}</cite>
+</section>

@@ -1,0 +1,49 @@
+---
+import SessionBlock from './SessionBlock.astro'
+import CollectionsSidebar from './CollectionsSidebar.astro'
+import type { Campaign } from '../lib/campaigns'
+
+interface Props {
+  campaign: Campaign
+  withSidebar?: boolean
+}
+
+const { campaign, withSidebar = false } = Astro.props
+
+const sessions = [...(campaign.data.talks ?? [])].sort(
+  (a, b) => a.session_order - b.session_order,
+)
+---
+
+<section class="main-section" id="talks">
+  <div class="main-grid" data-with-sidebar={withSidebar}>
+    <div>
+      <div class="talks-intro">
+        <h2>Sessions &amp; <em>Speakers</em></h2>
+        <p>
+          Browse by session below, or visit Collections to find talks from previous stake
+          conferences.
+        </p>
+      </div>
+
+      {
+        sessions.map((session) => (
+          <SessionBlock
+            campaignId={campaign.id}
+            session={session.session}
+            sessionDate={session.session_date}
+            items={session.items}
+          />
+        ))
+      }
+    </div>
+
+    {withSidebar && <CollectionsSidebar />}
+  </div>
+</section>
+
+<style>
+  .main-grid[data-with-sidebar='false'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+</style>

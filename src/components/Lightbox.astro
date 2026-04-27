@@ -1,0 +1,118 @@
+---
+import { getImage } from 'astro:assets'
+
+interface Photo {
+  file: ImageMetadata
+  alt: string
+}
+
+interface Props {
+  photos: Photo[]
+}
+
+const { photos } = Astro.props
+
+// Pre-render full-size optimized URLs for the lightbox so we can swap them in via JS.
+const resolved = await Promise.all(
+  photos.map(async (p) => {
+    const img = await getImage({
+      src: p.file,
+      widths: [1280, 1920],
+      format: 'webp',
+    })
+    return { src: img.src, alt: p.alt }
+  }),
+)
+---
+
+<div
+  class="lightbox"
+  id="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Photo gallery"
+  hidden
+>
+  <button class="lightbox-close" type="button" data-lightbox-close>Close ✕</button>
+  <button class="lightbox-prev" type="button" data-lightbox-prev aria-label="Previous photo">‹</button>
+  <button class="lightbox-next" type="button" data-lightbox-next aria-label="Next photo">›</button>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script is:inline define:vars={{ photos: resolved }}>
+  ;(() => {
+    const lb = document.getElementById('lightbox')
+    if (!lb) return
+    const img = document.getElementById('lightbox-img')
+    const counter = document.getElementById('lightbox-counter')
+    let index = 0
+    let lastFocus = null
+
+    function show() {
+      const photo = photos[index]
+      if (!photo) return
+      img.src = photo.src
+      img.alt = photo.alt
+      counter.textContent = `${index + 1} / ${photos.length}`
+    }
+
+    function open(i) {
+      index = ((i % photos.length) + photos.length) % photos.length
+      lastFocus = document.activeElement
+      lb.hidden = false
+      lb.classList.add('active')
+      document.body.style.overflow = 'hidden'
+      show()
+      lb.querySelector('[data-lightbox-close]').focus()
+    }
+
+    function close() {
+      lb.hidden = true
+      lb.classList.remove('active')
+      document.body.style.overflow = ''
+      if (lastFocus && typeof lastFocus.focus === 'function') {
+        lastFocus.focus()
+      }
+    }
+
+    function next() {
+      index = (index + 1) % photos.length
+      show()
+    }
+
+    function prev() {
+      index = (index - 1 + photos.length) % photos.length
+      show()
+    }
+
+    document.querySelectorAll('[data-lightbox-open]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault()
+        open(parseInt(btn.getAttribute('data-lightbox-open') || '0', 10))
+      })
+    })
+
+    lb.querySelector('[data-lightbox-close]').addEventListener('click', (e) => {
+      e.stopPropagation()
+      close()
+    })
+    lb.querySelector('[data-lightbox-prev]').addEventListener('click', (e) => {
+      e.stopPropagation()
+      prev()
+    })
+    lb.querySelector('[data-lightbox-next]').addEventListener('click', (e) => {
+      e.stopPropagation()
+      next()
+    })
+    img.addEventListener('click', (e) => e.stopPropagation())
+    lb.addEventListener('click', () => close())
+
+    document.addEventListener('keydown', (e) => {
+      if (lb.hidden) return
+      if (e.key === 'Escape') close()
+      else if (e.key === 'ArrowRight') next()
+      else if (e.key === 'ArrowLeft') prev()
+    })
+  })()
+</script>

@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets'
+import Lightbox from './Lightbox.astro'
+import type { Campaign } from '../lib/campaigns'
+
+interface Props {
+  campaign: Campaign
+}
+
+const { campaign } = Astro.props
+const gallery = campaign.data.photo_gallery
+if (!gallery) return null
+
+const all = gallery.photos
+// Pick the 4 tiles by featured_position (1 = big tile left, 2-4 = small right tiles).
+// Fall back to the first 4 photos in declared order if positions aren't set.
+const byPosition = new Map<number, (typeof all)[number]>()
+for (const photo of all) {
+  if (photo.featured_position && !byPosition.has(photo.featured_position)) {
+    byPosition.set(photo.featured_position, photo)
+  }
+}
+const tiles: typeof all = []
+for (let i = 1; i <= 4; i++) {
+  const explicit = byPosition.get(i)
+  if (explicit) {
+    tiles.push(explicit)
+  } else {
+    const fallback = all.find((p) => !tiles.includes(p))
+    if (fallback) tiles.push(fallback)
+  }
+}
+
+const galleryTitle = gallery.title
+const galleryMeta = gallery.meta
+const remaining = Math.max(all.length - 4, 0)
+
+// Words for italic emphasis on the last word of the title (e.g. "Linger Longer").
+const words = galleryTitle.trim().split(' ')
+const titleLead = words.slice(0, -2).join(' ')
+const titleEm = words.slice(-2).join(' ')
+---
+
+<section class="photo-teaser">
+  <div class="photo-teaser-header">
+    <h2>{titleLead && `${titleLead} `}<em>{titleEm}</em></h2>
+    {galleryMeta && <span class="meta">{galleryMeta}</span>}
+  </div>
+
+  <div class="photo-grid">
+    {
+      tiles.map((photo, idx) => {
+        const indexInAll = all.indexOf(photo)
+        return (
+          <button
+            type="button"
+            class:list={['photo-tile', idx === 0 && 'photo-tile-1']}
+            data-lightbox-open={indexInAll}
+            aria-label={`Open photo ${indexInAll + 1} in viewer`}
+          >
+            <Image
+              src={photo.file}
+              alt={photo.alt}
+              widths={[400, 800, 1200]}
+              sizes={idx === 0 ? '(max-width: 1100px) 50vw, 600px' : '(max-width: 1100px) 50vw, 300px'}
+            />
+            <div class="photo-tile-overlay">Click to view</div>
+          </button>
+        )
+      })
+    }
+
+    {
+      remaining > 0 && (
+        <button type="button" class="photo-tile photo-tile-more" data-lightbox-open="0" aria-label="View all photos">
+          <span class="num">+{remaining}</span>
+          <span class="label">More Photos</span>
+        </button>
+      )
+    }
+  </div>
+</section>
+
+<Lightbox photos={all} />

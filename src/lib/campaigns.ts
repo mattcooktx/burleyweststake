@@ -3,6 +3,36 @@ import { getCollection, type CollectionEntry } from 'astro:content'
 export type Campaign = CollectionEntry<'campaigns'>
 export type Category = CollectionEntry<'categories'>
 
+const pdfUrls = import.meta.glob<string>('/src/content/campaigns/**/pdfs/*.pdf', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+})
+
+/**
+ * Resolve a campaign-relative PDF path (e.g. "./pdfs/foo.pdf") to a built URL.
+ * Returns undefined if the file doesn't exist in the bundle.
+ */
+export function resolvePdfUrl(campaignId: string, relativePath: string): string | undefined {
+  const cleaned = relativePath.replace(/^\.\//, '')
+  const fullPath = `/src/content/campaigns/${campaignId}/${cleaned}`
+  return pdfUrls[fullPath]
+}
+
+/**
+ * Best link for a talk: PDF if present, else external link_url, else undefined.
+ */
+export function resolveTalkLink(
+  campaignId: string,
+  talk: { pdf?: string; link_url?: string },
+): string | undefined {
+  if (talk.pdf) {
+    const url = resolvePdfUrl(campaignId, talk.pdf)
+    if (url) return url
+  }
+  return talk.link_url
+}
+
 const isPublished = (c: Campaign) => !c.data.draft
 
 const startMs = (c: Campaign) => new Date(c.data.start_date).getTime()

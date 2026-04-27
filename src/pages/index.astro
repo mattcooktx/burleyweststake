@@ -1,31 +1,57 @@
 ---
 import Base from '../layouts/Base.astro'
+import Hero from '../components/Hero.astro'
+import TalksSection from '../components/TalksSection.astro'
+import PhotoTeaser from '../components/PhotoTeaser.astro'
+import ScriptureBand from '../components/ScriptureBand.astro'
+import SocialPost from '../components/SocialPost.astro'
+import Resources from '../components/Resources.astro'
 import { getActiveCampaign } from '../lib/campaigns'
 
-const active = await getActiveCampaign()
+const campaign = await getActiveCampaign()
 ---
 
-<Base current="home" title={active?.data.title}>
-  <section class="placeholder-section">
-    <p class="eyebrow">Coming in Epic 4</p>
-    <h1>Hero, talks, photos, scripture, Instagram, and resources will render here.</h1>
-    {
-      active && (
-        <p class="meta">
-          Active campaign resolved: <strong>{active.data.title}</strong> ({active.id})
+<Base
+  current="home"
+  title={campaign?.data.title}
+  description={campaign?.data.hero_subhead}
+>
+  {
+    campaign ? (
+      <>
+        <Hero campaign={campaign} />
+        <TalksSection campaign={campaign} withSidebar />
+        {campaign.data.photo_gallery && <PhotoTeaser campaign={campaign} />}
+        {campaign.data.featured_scripture && (
+          <ScriptureBand
+            text={campaign.data.featured_scripture.text}
+            reference={campaign.data.featured_scripture.reference}
+          />
+        )}
+        {campaign.data.social_post && <SocialPost campaign={campaign} />}
+        <Resources />
+      </>
+    ) : (
+      <section class="evergreen">
+        <p class="eyebrow">Burley Idaho West Stake</p>
+        <h1>Welcome.</h1>
+        <p class="lead">
+          The next campaign will appear here when it begins. In the meantime, the resources
+          below are always available.
         </p>
-      )
-    }
-  </section>
+        <Resources />
+      </section>
+    )
+  }
 
   <style>
-    .placeholder-section {
-      max-width: 1320px;
+    .evergreen {
+      max-width: 720px;
       margin: 0 auto;
-      padding: 80px 56px;
+      padding: 100px 24px 40px;
       text-align: center;
     }
-    .eyebrow {
+    .evergreen .eyebrow {
       font-family: var(--sans);
       font-size: 11px;
       letter-spacing: 0.28em;
@@ -33,29 +59,18 @@ const active = await getActiveCampaign()
       color: var(--accent);
       margin-bottom: 16px;
     }
-    .placeholder-section h1 {
+    .evergreen h1 {
       font-family: var(--serif-display);
-      font-size: 32px;
+      font-size: 56px;
       font-weight: 500;
       color: var(--ink);
-      max-width: 720px;
-      margin: 0 auto;
-      line-height: 1.25;
+      margin-bottom: 20px;
     }
-    .meta {
-      font-family: var(--sans);
-      font-size: 12px;
-      letter-spacing: 0.08em;
+    .evergreen .lead {
+      font-size: 18px;
       color: var(--ink-soft);
-      margin-top: 24px;
-    }
-    @media (max-width: 900px) {
-      .placeholder-section {
-        padding: 48px 24px;
-      }
-      .placeholder-section h1 {
-        font-size: 24px;
-      }
+      line-height: 1.65;
+      margin-bottom: 64px;
     }
   </style>
 </Base>
