@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import { getImage } from 'astro:assets'
 import Base from '../../layouts/Base.astro'
 import Hero from '../../components/Hero.astro'
 import TalksSection from '../../components/TalksSection.astro'
@@ -30,12 +31,25 @@ const navMap: Record<string, 'stake-conference' | 'holy-week' | 'christmas' | 'c
 }
 const current = navMap[campaign.data.category] ?? 'collections'
 const hasTalks = (campaign.data.talks?.length ?? 0) > 0
+
+// Pre-resolve a 1200-wide JPEG for share-preview crawlers (which can't
+// follow Astro's <picture>/srcset). Falls through to the default OG image
+// when the campaign has no hero of its own.
+let ogImage: string | undefined
+if (campaign.data.hero_image) {
+  const img = await getImage({ src: campaign.data.hero_image, width: 1200, format: 'jpeg' })
+  ogImage = img.src
+}
 ---
 
 <Base
   current={current}
   title={campaign.data.title}
-  description={campaign.data.hero_subhead}
+  description={campaign.data.hero_subhead ?? `${campaign.data.title} — Burley Idaho West Stake.`}
+  meta={{
+    ogTitle: campaign.data.hero_headline,
+    ogImage,
+  }}
 >
   {campaign.data.hero_image ? (
     <Hero campaign={campaign} />

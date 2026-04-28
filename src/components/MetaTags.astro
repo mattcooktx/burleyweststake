@@ -1,0 +1,66 @@
+---
+import { site } from '../lib/site'
+
+/**
+ * Centralized OG / Twitter / standard meta-tag emitter.
+ *
+ * Pages pass typed props describing what should appear in the share preview;
+ * the homepage passes a static identity override so it never previews as
+ * whatever campaign happens to be rotating today (the symptom the brief
+ * describes).
+ */
+export interface MetaTagsProps {
+  /** Browser tab title. Site brand suffix applied automatically unless `bareTitle`. */
+  pageTitle: string
+  /** Set true to skip the " — Burley Idaho West Stake" suffix (homepage only). */
+  bareTitle?: boolean
+  /** <meta name="description"> + og:description + twitter:description. */
+  description: string
+  /** og:title + twitter:title. Defaults to pageTitle. Use to give share previews a different headline than the tab. */
+  ogTitle?: string
+  /** og:description + twitter:description. Defaults to description. Pass '' to emit empty description (per Matt's title-only treatment on homepage). */
+  ogDescription?: string
+  /** Path or absolute URL for og:image / twitter:image. Resolved to absolute via Astro.site. */
+  ogImage?: string
+  /** Open Graph type. Defaults to "website"; use "article" for talk pages. */
+  ogType?: 'website' | 'article'
+  /** Override the canonical URL. Defaults to current page URL. */
+  canonical?: string
+}
+
+interface Props extends MetaTagsProps {}
+
+const {
+  pageTitle,
+  bareTitle = false,
+  description,
+  ogTitle,
+  ogDescription,
+  ogImage = '/og-default.jpg',
+  ogType = 'website',
+  canonical: canonicalOverride,
+} = Astro.props
+
+const fullPageTitle = bareTitle ? pageTitle : `${pageTitle} — ${site.brand.name}`
+const sharedTitle = ogTitle ?? fullPageTitle
+// Homepage passes ogDescription="" intentionally; respect it (don't fall through to description).
+const sharedDescription = ogDescription !== undefined ? ogDescription : description
+const canonicalUrl = canonicalOverride ?? new URL(Astro.url.pathname, Astro.site).toString()
+const absoluteOgImage = new URL(ogImage, Astro.site).toString()
+---
+
+<title>{fullPageTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={site.brand.name} />
+<meta property="og:title" content={sharedTitle} />
+<meta property="og:description" content={sharedDescription} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={absoluteOgImage} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={sharedTitle} />
+<meta name="twitter:description" content={sharedDescription} />
+<meta name="twitter:image" content={absoluteOgImage} />

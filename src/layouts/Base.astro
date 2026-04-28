@@ -2,24 +2,46 @@
 import '../styles/global.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import MetaTags, { type MetaTagsProps } from '../components/MetaTags.astro'
 import { site } from '../lib/site'
 
 interface Props {
+  /** Browser tab title (without brand suffix). Defaults to brand name (which then becomes the bare home-page title). */
   title?: string
+  /** Description for <meta name="description"> and the default share description. */
   description?: string
+  /** Path or absolute URL for og:image / twitter:image. */
   ogImage?: string
+  /** Active nav pill highlight. */
   current?: 'home' | 'stake-conference' | 'holy-week' | 'christmas' | 'collections'
+  /**
+   * Override OG-only fields. Pages pass these when share-preview content
+   * should differ from in-page content (e.g. homepage uses static identity
+   * regardless of which campaign is active).
+   */
+  meta?: Partial<MetaTagsProps>
 }
 
 const {
   title,
   description = site.description,
-  ogImage = '/og-default.jpg',
+  ogImage,
   current,
+  meta = {},
 } = Astro.props
 
-const pageTitle = title ? `${title} — ${site.brand.name}` : site.brand.name
-const canonical = new URL(Astro.url.pathname, Astro.site).toString()
+// Default: page title gets " — Burley Idaho West Stake" suffix. If no title
+// is passed (homepage), use the brand name bare and skip the suffix.
+const pageTitle = title ?? site.brand.name
+const bareTitle = !title
+
+const metaProps: MetaTagsProps = {
+  pageTitle,
+  bareTitle,
+  description,
+  ogImage,
+  ...meta,
+}
 ---
 
 <!doctype html>
@@ -29,24 +51,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString()
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={canonical} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(ogImage, Astro.site).toString()} />
+    <MetaTags {...metaProps} />
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   </head>
   <body>

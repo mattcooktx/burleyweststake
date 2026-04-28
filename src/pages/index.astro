@@ -7,14 +7,22 @@ import ScriptureBand from '../components/ScriptureBand.astro'
 import SocialPost from '../components/SocialPost.astro'
 import Resources from '../components/Resources.astro'
 import { getActiveCampaign } from '../lib/campaigns'
+import { site } from '../lib/site'
 
 const campaign = await getActiveCampaign()
 ---
 
 <Base
   current="home"
-  title={campaign?.data.title}
-  description={campaign?.data.hero_subhead}
+  description={site.description}
+  meta={{
+    /* Per the brief: homepage OG is STATIC, independent of the rotating
+       campaign. Sharing the homepage in February shouldn't preview as a
+       Christmas campaign that has since rotated away. */
+    ogTitle: site.brand.name,
+    ogDescription: '',
+    ogImage: '/og-default.jpg',
+  }}
 >
   {
     campaign ? (
