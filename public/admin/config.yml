@@ -123,11 +123,24 @@ collections:
         fields:
           - { label: 'Section title', name: title, widget: string, required: false, default: 'Photos from the Linger Longer' }
           - { label: 'Section subhead', name: meta, widget: string, required: false, hint: 'Example: "After the Sunday Session"' }
-          - label: 'Photos'
+
+          - {
+              label: 'Drop photos to upload (fastest path)',
+              name: bulk_photos,
+              widget: image,
+              required: false,
+              multiple: true,
+              media_folder: 'images',
+              public_folder: './images',
+              hint: 'Drag-and-drop multiple files OR click to multi-select. Photos appear in the gallery in upload order with the campaign title as default alt text. To set custom alt text or pick the 4 homepage tiles, use the detailed list below.',
+            }
+
+          - label: 'Photos with custom alt text or homepage tile assignments'
             name: photos
             widget: list
             required: false
             summary: '{{fields.alt}}'
+            hint: 'Use this list when you need to set specific alt text, drag-reorder photos, or mark which 4 photos appear as the homepage tiles. Drag the handle on the left of any row to reorder.'
             fields:
               - {
                   label: 'Photo',

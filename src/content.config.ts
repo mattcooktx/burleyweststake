@@ -103,16 +103,29 @@ const campaigns = defineCollection({
         .object({
           title: z.string().default('Photos from the Linger Longer'),
           meta: z.preprocess(emptyToUndef, z.string().optional()),
-          photos: z.array(
-            z.object({
-              file: z.preprocess(ensureRelativePrefix, image()),
-              alt: z.preprocess(emptyToUndef, z.string().optional().default('')),
-              featured_position: z.preprocess(
-                optionalIntFromCms,
-                z.number().int().min(1).max(4).optional(),
-              ),
-            }),
+          // Bulk-uploaded images. Editor multi-selects N files at once
+          // via Decap's `multiple: true` image widget; each becomes a
+          // gallery entry with no metadata. Default alt text is the
+          // campaign title (set at render time).
+          bulk_photos: z.preprocess(
+            (v) => (v == null ? [] : v),
+            z.array(z.preprocess(ensureRelativePrefix, image())).default([]),
           ),
+          photos: z
+            .preprocess(
+              (v) => (v == null ? [] : v),
+              z.array(
+                z.object({
+                  file: z.preprocess(ensureRelativePrefix, image()),
+                  alt: z.preprocess(emptyToUndef, z.string().optional().default('')),
+                  featured_position: z.preprocess(
+                    optionalIntFromCms,
+                    z.number().int().min(1).max(4).optional(),
+                  ),
+                }),
+              ),
+            )
+            .default([]),
         })
         .optional(),
       // Whether this campaign is eligible for the rotating homepage.
