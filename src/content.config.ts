@@ -72,7 +72,11 @@ const campaigns = defineCollection({
           post_url: z.string().url(),
           preview_image: image().optional(),
           caption: z.string(),
-          posted_at: z.string(),
+          // YAML may parse ISO-8601 datetimes as JS Date objects. Accept either
+          // and normalize to an ISO string so downstream code is consistent.
+          posted_at: z
+            .union([z.string(), z.date()])
+            .transform((v) => (v instanceof Date ? v.toISOString() : v)),
         })
         .optional(),
       draft: z.boolean().default(false),
