@@ -57,13 +57,21 @@ collections:
       - {
           label: 'Start date',
           name: start_date,
-          widget: date,
+          widget: datetime,
+          date_format: 'YYYY-MM-DD',
+          time_format: false,
+          format: 'YYYY-MM-DD',
+          picker_utc: true,
           hint: 'When this campaign should start showing on the homepage.',
         }
       - {
           label: 'End date',
           name: end_date,
-          widget: date,
+          widget: datetime,
+          date_format: 'YYYY-MM-DD',
+          time_format: false,
+          format: 'YYYY-MM-DD',
+          picker_utc: true,
           hint: 'When this campaign should stop being the homepage feature.',
         }
       - { label: 'Hero eyebrow', name: hero_eyebrow, widget: string, required: false, hint: 'Small label above the headline. Example: "Stake Conference Recap"' }
@@ -190,7 +198,16 @@ collections:
               hint: 'Optional. If left blank, the featured scripture quote will be shown on a styled gradient.',
             }
           - { label: 'Caption', name: caption, widget: text }
-          - { label: 'Posted at', name: posted_at, widget: datetime }
+          - {
+              label: 'Posted at',
+              name: posted_at,
+              widget: datetime,
+              date_format: 'YYYY-MM-DD',
+              time_format: 'HH:mm:ss',
+              format: "YYYY-MM-DD[T]HH:mm:ss",
+              picker_utc: true,
+              hint: 'Stored as a string like 2026-04-22T19:14:00.',
+            }
 
       - {
           label: 'Draft (hide from site)',
