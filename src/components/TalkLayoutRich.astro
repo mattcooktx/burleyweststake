@@ -21,6 +21,11 @@ const titleHtml = renderTitleHtml(talk.data.title)
 const plainTitle = stripTitleMarkers(talk.data.title)
 
 const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undefined
+const hasBody = (talk.data.body?.length ?? 0) > 0
+// Empty-body talks are placeholders — show the "coming soon" block and
+// suppress the PDF CTA entirely. The CTA will reappear once content is
+// added (or once a PDF is uploaded).
+const showPdfCta = hasBody || !!pdfUrl
 ---
 
 <nav class="talk-breadcrumb" aria-label="Breadcrumb">
@@ -55,23 +60,38 @@ const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undef
 }
 
 <article class="talk-body">
-  {talk.data.body && <TalkBody blocks={talk.data.body} />}
+  {hasBody && <TalkBody blocks={talk.data.body!} />}
 
-  <div class="pdf-cta">
-    <h4>Download the Outline</h4>
-    <p>
-      A printable summary of the scriptures, quotations, and references shared in this talk.
-    </p>
-    {
-      pdfUrl ? (
-        <a href={pdfUrl} target="_blank" rel="noopener">
-          Download PDF
-        </a>
-      ) : (
-        <span class="pdf-cta-pending">PDF coming soon</span>
-      )
-    }
-  </div>
+  {
+    !hasBody && (
+      <div class="talk-coming-soon">
+        <p>
+          <em>
+            Content from this talk will be posted soon. Check back after the speaker has
+            shared their materials with the stake.
+          </em>
+        </p>
+      </div>
+    )
+  }
+
+  {
+    showPdfCta && (
+      <div class="pdf-cta">
+        <h4>Download the Outline</h4>
+        <p>
+          A printable summary of the scriptures, quotations, and references shared in this talk.
+        </p>
+        {pdfUrl ? (
+          <a href={pdfUrl} target="_blank" rel="noopener">
+            Download PDF
+          </a>
+        ) : (
+          <span class="pdf-cta-pending">PDF coming soon</span>
+        )}
+      </div>
+    )
+  }
 </article>
 
 <div class="back-link">

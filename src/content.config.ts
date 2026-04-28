@@ -226,10 +226,9 @@ const talks = defineCollection({
         message: 'PDF-mode talks must have a `pdf` field',
         path: ['pdf'],
       })
-      .refine(
-        (data) => (data.layout === 'rich' ? !!data.body && data.body.length > 0 : true),
-        { message: 'Rich-mode talks must have at least one body block', path: ['body'] },
-      )
+      // Rich talks may have an empty body — that's the "placeholder talk"
+      // shape: header renders, the talk page shows a "coming soon" block,
+      // and editors can fill in body blocks via the CMS later.
   },
 })
 
