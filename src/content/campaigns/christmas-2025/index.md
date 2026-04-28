@@ -2,7 +2,7 @@
 title: Christmas 2025
 slug: christmas-2025
 category: christmas
-start_date: 2026-04-28
+start_date: 2099-01-01
 end_date: 2099-01-08
 hero_headline: Christmas 2025
 hero_subhead: Christmas Video Message From President Cook - 2025
