@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content'
 import { getImage } from 'astro:assets'
 import Base from '../../../layouts/Base.astro'
 import Hero from '../../../components/Hero.astro'
+import FeaturedVideo from '../../../components/FeaturedVideo.astro'
 import TalksSection from '../../../components/TalksSection.astro'
 import PhotoTeaser from '../../../components/PhotoTeaser.astro'
 import ScriptureBand from '../../../components/ScriptureBand.astro'
@@ -69,6 +70,12 @@ if (campaign.data.hero_image) {
     </section>
   ) : (
     <>
+      {campaign.data.video_embed && (
+        <FeaturedVideo
+          embed={campaign.data.video_embed}
+          caption={campaign.data.video_caption}
+        />
+      )}
       {hasTalks && <TalksSection campaign={campaign} withSidebar />}
       {campaign.data.photo_gallery && <PhotoTeaser campaign={campaign} />}
       {campaign.data.featured_scripture && (

@@ -90,6 +90,12 @@ const campaigns = defineCollection({
       // Instagram's official "Embed" HTML blob, pasted as-is from the post's
       // three-dot menu. Rendered raw so the post looks how Instagram intends.
       instagram_embed_code: z.preprocess(emptyToUndef, z.string().optional()),
+      // YouTube URL or full embed code; renders as a click-to-load tile
+      // below the hero. Supports youtu.be/, youtube.com/watch?v=,
+      // youtube.com/embed/, or a full <iframe ...> blob — extractor
+      // pulls the 11-char video ID from any of them.
+      video_embed: z.preprocess(emptyToUndef, z.string().optional()),
+      video_caption: z.preprocess(emptyToUndef, z.string().optional()),
       draft: z.boolean().default(false),
     }),
 })
