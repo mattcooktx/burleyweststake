@@ -42,12 +42,16 @@ export function formatDateRange(c: Campaign): string {
   if (isPlaceholder(c)) return 'Coming soon'
   const fmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
   const start = fmt.format(new Date(c.data.start_date))
+  if (!c.data.end_date) return start
   const end = fmt.format(new Date(c.data.end_date))
   return `${start} – ${end}`
 }
 
 const startMs = (c: Campaign) => new Date(c.data.start_date).getTime()
-const endMs = (c: Campaign) => new Date(c.data.end_date).getTime()
+// Missing end_date = "never ends". Returns +Infinity so range checks
+// always pass on the upper bound.
+const endMs = (c: Campaign) =>
+  c.data.end_date ? new Date(c.data.end_date).getTime() : Number.POSITIVE_INFINITY
 
 /**
  * Resolve the campaign that should drive the homepage today.
@@ -64,7 +68,12 @@ export async function getActiveCampaign(now: Date = new Date()): Promise<Campaig
     .sort((a, b) => startMs(b) - startMs(a))
   if (active.length > 0) return active[0]
 
-  const past = all.filter((c) => endMs(c) < today).sort((a, b) => endMs(b) - endMs(a))
+  // "Most recently ended" — campaigns with a real (finite) end_date in the
+  // past. Open-ended campaigns (no end_date) never qualify here; they're
+  // either currently active above or they fall through to null.
+  const past = all
+    .filter((c) => Number.isFinite(endMs(c)) && endMs(c) < today)
+    .sort((a, b) => endMs(b) - endMs(a))
   if (past.length > 0) return past[0]
 
   return null

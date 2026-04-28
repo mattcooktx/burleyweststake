@@ -47,7 +47,7 @@ if (campaign.data.hero_image) {
   title={campaign.data.title}
   description={campaign.data.hero_subhead ?? `${campaign.data.title} — Burley Idaho West Stake.`}
   meta={{
-    ogTitle: campaign.data.hero_headline,
+    ogTitle: campaign.data.hero_headline ?? campaign.data.title,
     ogImage,
   }}
 >
@@ -56,7 +56,7 @@ if (campaign.data.hero_image) {
   ) : (
     <header class="page-header">
       <span class="eyebrow">{campaign.data.title}</span>
-      <h1><em>{campaign.data.hero_headline}</em></h1>
+      <h1><em>{campaign.data.hero_headline ?? campaign.data.title}</em></h1>
       {campaign.data.hero_subhead && <p>{campaign.data.hero_subhead}</p>}
     </header>
   )}

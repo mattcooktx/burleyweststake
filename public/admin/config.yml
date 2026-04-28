@@ -55,27 +55,31 @@ collections:
           - { label: 'Youth Conference', value: youth-conference }
           - { label: 'Other', value: other }
       - {
-          label: 'Start date',
+          label: 'Start date (optional)',
           name: start_date,
           widget: datetime,
+          required: false,
           date_format: 'YYYY-MM-DD',
           time_format: false,
           format: 'YYYY-MM-DD',
           picker_utc: true,
-          hint: 'When this campaign should start showing on the homepage.',
+          default: '',
+          hint: 'Leave blank to start today. The campaign with the most recent start date wins the homepage.',
         }
       - {
-          label: 'End date',
+          label: 'End date (optional)',
           name: end_date,
           widget: datetime,
+          required: false,
           date_format: 'YYYY-MM-DD',
           time_format: false,
           format: 'YYYY-MM-DD',
           picker_utc: true,
-          hint: 'When this campaign should stop being the homepage feature.',
+          default: '',
+          hint: 'Leave blank for an open-ended campaign that runs until the next one is created.',
         }
       - { label: 'Hero eyebrow', name: hero_eyebrow, widget: string, required: false, hint: 'Small label above the headline. Example: "Stake Conference Recap"' }
-      - { label: 'Hero headline', name: hero_headline, widget: string }
+      - { label: 'Hero headline', name: hero_headline, widget: string, required: false, hint: 'The big italic headline at the top of the campaign page. Optional — leave blank for video-only campaigns.' }
       - { label: 'Hero subhead', name: hero_subhead, widget: text, required: false }
       - {
           label: 'Hero image',
@@ -87,36 +91,38 @@ collections:
         }
       - { label: 'Hero image alt text', name: hero_image_alt, widget: string, required: false }
 
-      - label: 'Featured scripture'
+      - label: 'Featured scripture (optional)'
         name: featured_scripture
         widget: object
         required: false
         collapsed: true
         fields:
-          - { label: 'Quote', name: text, widget: text }
-          - { label: 'Reference', name: reference, widget: string, hint: 'Example: 2 Nephi 32:3' }
+          - { label: 'Quote', name: text, widget: text, required: false }
+          - { label: 'Reference', name: reference, widget: string, required: false, hint: 'Example: 2 Nephi 32:3' }
 
-      - label: 'Photo gallery'
+      - label: 'Photo gallery (optional)'
         name: photo_gallery
         widget: object
         required: false
         collapsed: true
         fields:
-          - { label: 'Section title', name: title, widget: string, default: 'Photos from the Linger Longer' }
+          - { label: 'Section title', name: title, widget: string, required: false, default: 'Photos from the Linger Longer' }
           - { label: 'Section subhead', name: meta, widget: string, required: false, hint: 'Example: "After the Sunday Session"' }
           - label: 'Photos'
             name: photos
             widget: list
+            required: false
             summary: '{{fields.alt}}'
             fields:
               - {
                   label: 'Photo',
                   name: file,
                   widget: image,
+                  required: false,
                   media_folder: 'images',
                   public_folder: './images',
                 }
-              - { label: 'Alt text (description)', name: alt, widget: string }
+              - { label: 'Alt text (description)', name: alt, widget: string, required: false }
               - {
                   label: 'Featured tile position (1–4)',
                   name: featured_position,

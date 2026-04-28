@@ -57,10 +57,20 @@ const campaigns = defineCollection({
       title: z.string(),
       slug: z.string(),
       category: z.enum(CATEGORY_KEYS),
-      start_date: z.coerce.date(),
-      end_date: z.coerce.date(),
+      // Both dates optional now. start_date defaults to today (so a freshly-
+      // created campaign goes live immediately). end_date can be omitted —
+      // the active-campaign logic treats missing end_date as "never ends",
+      // and the next campaign with a more recent start_date supersedes it.
+      start_date: z.preprocess(
+        (v) => (v === '' || v == null ? new Date() : v),
+        z.coerce.date(),
+      ),
+      end_date: z.preprocess(
+        (v) => (v === '' || v == null ? undefined : v),
+        z.coerce.date().optional(),
+      ),
       hero_eyebrow: z.preprocess(emptyToUndef, z.string().optional()),
-      hero_headline: z.string(),
+      hero_headline: z.preprocess(emptyToUndef, z.string().optional()),
       hero_subhead: z.preprocess(emptyToUndef, z.string().optional()),
       hero_image: z.preprocess(ensureRelativePrefix, image().optional()),
       hero_image_alt: z.preprocess(emptyToUndef, z.string().optional()),

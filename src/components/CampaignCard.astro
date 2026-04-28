@@ -9,7 +9,8 @@ interface Props {
 const { campaign } = Astro.props
 const placeholder = isPlaceholder(campaign)
 const heroImage = campaign.data.hero_image
-const headlineWords = campaign.data.hero_headline.trim().split(' ')
+const headlineText = campaign.data.hero_headline ?? campaign.data.title
+const headlineWords = headlineText.trim().split(' ')
 const split = Math.max(headlineWords.length - 2, 0)
 const headlineLead = headlineWords.slice(0, split).join(' ')
 const headlineEm = headlineWords.slice(split).join(' ')
