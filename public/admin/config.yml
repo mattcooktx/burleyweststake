@@ -58,6 +58,7 @@ collections:
           label: 'Show on homepage?',
           name: homepage,
           widget: boolean,
+          required: false,
           default: false,
           hint: 'Only ONE campaign should have this on at a time — the campaign currently featured at the top of burleyweststake.com. Editing dates on a non-homepage campaign will never affect the homepage. To swap the homepage to a different campaign, turn this on for the new one and off for the old one.',
         }
@@ -183,6 +184,7 @@ collections:
           label: 'Draft (hide from site)',
           name: draft,
           widget: boolean,
+          required: false,
           default: false,
           required: false,
           hint: 'Check to keep this campaign hidden until ready.',
@@ -261,6 +263,7 @@ collections:
           label: 'Featured?',
           name: featured,
           widget: boolean,
+          required: false,
           default: false,
           hint: 'Featured talks render as the large prominent card on the homepage. Stake Presidency talks are typically featured.',
         }
@@ -450,6 +453,7 @@ collections:
           label: 'Draft (hide from site)',
           name: draft,
           widget: boolean,
+          required: false,
           default: false,
           required: false,
         }
