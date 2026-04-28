@@ -136,17 +136,25 @@ collections:
                   media_folder: 'images',
                   public_folder: './images',
                 }
-              - { label: 'Alt text (description)', name: alt, widget: string, required: false }
               - {
-                  label: 'Featured tile position (1–4)',
-                  name: featured_position,
-                  widget: number,
-                  value_type: int,
+                  label: 'Alt text (description)',
+                  name: alt,
+                  widget: string,
                   required: false,
-                  min: 1,
-                  max: 4,
-                  hint: '1 = big tile on the left, 2–4 = small tiles on the right. Leave empty for gallery-only.',
+                  hint: 'Optional. Describes the photo for screen readers and search engines.',
                 }
+              - label: 'Show on homepage?'
+                name: featured_position
+                widget: select
+                required: false
+                default: ''
+                options:
+                  - { label: 'No — gallery only', value: '' }
+                  - { label: 'Yes — tile 1 (big tile, left)', value: '1' }
+                  - { label: 'Yes — tile 2 (top right)', value: '2' }
+                  - { label: 'Yes — tile 3 (middle right)', value: '3' }
+                  - { label: 'Yes — tile 4 (bottom right)', value: '4' }
+                hint: 'Most photos stay gallery-only. Pick a tile position for the four photos you want to feature on the homepage.'
 
       - {
           label: 'Instagram Embed Code',

@@ -21,6 +21,19 @@ const CATEGORY_KEYS = [
 
 const emptyToUndef = (v: unknown) => (v === '' || v == null ? undefined : v)
 
+// Numeric variant: coerces '', null, 0, 'null', and stringified numbers to
+// either undefined or a real number. Decap's number widget can save '' on
+// clear, null on reset, '0' as a placeholder, or a stringified value
+// depending on the widget config — all should be tolerated.
+const optionalIntFromCms = (v: unknown) => {
+  if (v === '' || v == null || v === 0 || v === '0' || v === 'null') return undefined
+  if (typeof v === 'string') {
+    const n = parseInt(v, 10)
+    return Number.isFinite(n) ? n : undefined
+  }
+  return v
+}
+
 const ensureRelativePrefix = (v: unknown) => {
   if (
     typeof v === 'string' &&
@@ -93,9 +106,9 @@ const campaigns = defineCollection({
           photos: z.array(
             z.object({
               file: z.preprocess(ensureRelativePrefix, image()),
-              alt: z.string(),
+              alt: z.preprocess(emptyToUndef, z.string().optional().default('')),
               featured_position: z.preprocess(
-                emptyToUndef,
+                optionalIntFromCms,
                 z.number().int().min(1).max(4).optional(),
               ),
             }),
