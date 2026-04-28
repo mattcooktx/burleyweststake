@@ -7,6 +7,7 @@ import FeaturedVideo from '../../../components/FeaturedVideo.astro'
 import TalksSection from '../../../components/TalksSection.astro'
 import PhotoTeaser from '../../../components/PhotoTeaser.astro'
 import ScriptureBand from '../../../components/ScriptureBand.astro'
+import SocialPost from '../../../components/SocialPost.astro'
 import { getTalksForCampaign, isPlaceholder, type Campaign } from '../../../lib/campaigns'
 import type { GetStaticPaths } from 'astro'
 
@@ -84,6 +85,7 @@ if (campaign.data.hero_image) {
           reference={campaign.data.featured_scripture.reference}
         />
       )}
+      {campaign.data.instagram_embed_code && <SocialPost campaign={campaign} />}
     </>
   )}
 </Base>
