@@ -15,6 +15,9 @@ photo_gallery:
       file: images/img_1421.jpg
     - featured_position: ""
       file: images/img_1423.jpg
+    - homepage_featured: false
+      file: images/img_3448.jpg
+    - homepage_featured: false
 instagram_embed_code: >-
   <blockquote class="instagram-media" data-instgrm-captioned
   data-instgrm-permalink="https://www.instagram.com/reel/DTWaoy-j1vP/?utm_source=ig_embed&amp;utm_campaign=loading"
