@@ -11,39 +11,16 @@ const { campaign } = Astro.props
 const gallery = campaign.data.photo_gallery
 if (!gallery) return null
 
-// Default alt for bulk-uploaded photos (no per-photo metadata).
-const defaultAlt = `Photo from ${campaign.data.title}`
-
-// Merge bulk uploads (no metadata) with detailed photos (alt + featured_position).
-// Detailed photos render first so featured_position assignments take priority,
-// then the rest of the bulk list fills in.
-type GalleryEntry = {
-  file: ImageMetadata
-  alt: string
-  featured_position?: number
-}
-const detailed: GalleryEntry[] = (gallery.photos ?? []).map((p) => ({
-  file: p.file,
-  alt: p.alt && p.alt.length > 0 ? p.alt : defaultAlt,
-  featured_position: p.featured_position,
-}))
-const bulk: GalleryEntry[] = (gallery.bulk_photos ?? []).map((file) => ({
-  file,
-  alt: defaultAlt,
-}))
-const all: GalleryEntry[] = [...detailed, ...bulk]
-
-if (all.length === 0) return null
-
+const all = gallery.photos
 // Pick the 4 tiles by featured_position (1 = big tile left, 2-4 = small right tiles).
 // Fall back to the first 4 photos in declared order if positions aren't set.
-const byPosition = new Map<number, GalleryEntry>()
+const byPosition = new Map<number, (typeof all)[number]>()
 for (const photo of all) {
   if (photo.featured_position && !byPosition.has(photo.featured_position)) {
     byPosition.set(photo.featured_position, photo)
   }
 }
-const tiles: GalleryEntry[] = []
+const tiles: typeof all = []
 for (let i = 1; i <= 4; i++) {
   const explicit = byPosition.get(i)
   if (explicit) {
@@ -56,7 +33,7 @@ for (let i = 1; i <= 4; i++) {
 
 const galleryTitle = gallery.title
 const galleryMeta = gallery.meta
-const remaining = Math.max(all.length - tiles.length, 0)
+const remaining = Math.max(all.length - 4, 0)
 
 // Words for italic emphasis on the last word of the title (e.g. "Linger Longer").
 const words = galleryTitle.trim().split(' ')
