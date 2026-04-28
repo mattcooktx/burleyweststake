@@ -1,11 +1,21 @@
 ---
-title: "Christmas 2025"
-slug: "christmas-2025"
-category: "christmas"
+title: Christmas 2025
+slug: christmas-2025
+category: christmas
 start_date: 2099-01-01
 end_date: 2099-01-08
-hero_headline: "Christmas 2025"
-hero_subhead: "Christmas devotionals and seasonal video messages. Real content will replace this stub."
+hero_headline: Christmas 2025
+hero_subhead: Christmas Message 2025
+featured_scripture:
+  text: '"Behold the handmaid of the Lord; be it unto me according to thy word"'
+  reference: Luke 1:38
+photo_gallery:
+  title: Behold the Handmaid of the Lord
+  photos:
+    - alt: Be it unto me...
+      file: images/carl_heinrich_bloch_-_the_annunciation.jpg
+video_embed: https://youtu.be/9AlR4FYLaTg?si=dKgZcGk9uUcS87yc
+video_caption: President Cook's Christmas Video Message
 ---
 
 Stub campaign — placeholder so the Christmas collection page has at least one entry to render against.
