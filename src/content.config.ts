@@ -10,6 +10,34 @@ const CATEGORY_KEYS = [
   'other',
 ] as const
 
+// ============================================================
+// CMS-tolerant preprocess helpers
+// ============================================================
+// Decap CMS occasionally saves shapes that don't quite match what the
+// schema expects: empty strings for cleared optional fields, null for
+// cleared numbers, paths without a "./" prefix, ISO datetimes that the
+// YAML parser then coerces into JS Dates. These helpers paper over
+// those quirks centrally so every field doesn't need its own fix.
+
+const emptyToUndef = (v: unknown) => (v === '' || v == null ? undefined : v)
+
+const ensureRelativePrefix = (v: unknown) => {
+  if (
+    typeof v === 'string' &&
+    v.length > 0 &&
+    !v.startsWith('./') &&
+    !v.startsWith('../') &&
+    !v.startsWith('/') &&
+    !/^https?:\/\//.test(v)
+  ) {
+    return `./${v}`
+  }
+  return v
+}
+
+const dateToIsoString = (v: unknown) =>
+  v instanceof Date ? v.toISOString() : v
+
 const campaigns = defineCollection({
   loader: glob({
     pattern: '**/*.md',
@@ -23,11 +51,11 @@ const campaigns = defineCollection({
       category: z.enum(CATEGORY_KEYS),
       start_date: z.coerce.date(),
       end_date: z.coerce.date(),
-      hero_eyebrow: z.string().optional(),
+      hero_eyebrow: z.preprocess(emptyToUndef, z.string().optional()),
       hero_headline: z.string(),
-      hero_subhead: z.string().optional(),
-      hero_image: image().optional(),
-      hero_image_alt: z.string().optional(),
+      hero_subhead: z.preprocess(emptyToUndef, z.string().optional()),
+      hero_image: z.preprocess(ensureRelativePrefix, image().optional()),
+      hero_image_alt: z.preprocess(emptyToUndef, z.string().optional()),
       featured_scripture: z
         .object({
           text: z.string(),
@@ -45,8 +73,11 @@ const campaigns = defineCollection({
                 title: z.string(),
                 speaker: z.string(),
                 summary: z.string(),
-                pdf: z.string().optional(),
-                link_url: z.string().url().optional(),
+                pdf: z.preprocess(
+                  (v) => ensureRelativePrefix(emptyToUndef(v)),
+                  z.string().optional(),
+                ),
+                link_url: z.preprocess(emptyToUndef, z.string().url().optional()),
                 featured: z.boolean().default(false),
               }),
             ),
@@ -56,12 +87,15 @@ const campaigns = defineCollection({
       photo_gallery: z
         .object({
           title: z.string().default('Photos from the Linger Longer'),
-          meta: z.string().optional(),
+          meta: z.preprocess(emptyToUndef, z.string().optional()),
           photos: z.array(
             z.object({
-              file: image(),
+              file: z.preprocess(ensureRelativePrefix, image()),
               alt: z.string(),
-              featured_position: z.number().int().min(1).max(4).optional(),
+              featured_position: z.preprocess(
+                emptyToUndef,
+                z.number().int().min(1).max(4).optional(),
+              ),
             }),
           ),
         })
@@ -70,13 +104,14 @@ const campaigns = defineCollection({
         .object({
           platform: z.enum(['instagram', 'facebook']),
           post_url: z.string().url(),
-          preview_image: image().optional(),
+          preview_image: z.preprocess(ensureRelativePrefix, image().optional()),
           caption: z.string(),
           // YAML may parse ISO-8601 datetimes as JS Date objects. Accept either
-          // and normalize to an ISO string so downstream code is consistent.
-          posted_at: z
-            .union([z.string(), z.date()])
-            .transform((v) => (v instanceof Date ? v.toISOString() : v)),
+          // shape and normalize to an ISO string so downstream code is consistent.
+          posted_at: z.preprocess(
+            dateToIsoString,
+            z.string(),
+          ),
         })
         .optional(),
       draft: z.boolean().default(false),
