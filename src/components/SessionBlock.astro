@@ -27,15 +27,27 @@ const restOfLabel = labelWords.slice(1).join(' ')
   </div>
 
   {
-    featured.map((talk) => (
-      <FeaturedTalkCard
-        title={talk.data.title}
-        speaker={talk.data.speaker}
-        summary={talk.data.teaser}
-        href={talkUrl(talk)}
-        meta={`${talk.data.speaker_role ?? talk.data.speaker} · Featured`}
-      />
-    ))
+    featured.length > 1 ? (
+      <div class="talks-featured-grid" data-count={featured.length}>
+        {featured.map((talk) => (
+          <FeaturedTalkCard
+            title={talk.data.title}
+            speaker={talk.data.speaker}
+            summary={talk.data.teaser}
+            href={talkUrl(talk)}
+          />
+        ))}
+      </div>
+    ) : (
+      featured.map((talk) => (
+        <FeaturedTalkCard
+          title={talk.data.title}
+          speaker={talk.data.speaker}
+          summary={talk.data.teaser}
+          href={talkUrl(talk)}
+        />
+      ))
+    )
   }
 
   {

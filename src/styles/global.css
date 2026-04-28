@@ -432,7 +432,6 @@ video {
 .talks-intro {
   margin-bottom: 56px;
   padding-bottom: 32px;
-  border-bottom: 1px solid var(--rule);
 }
 .talks-intro h2 {
   font-family: var(--serif-display);
@@ -453,15 +452,15 @@ video {
 }
 
 .session {
-  margin-bottom: 80px;
+  border-top: 1px solid var(--rule);
+  padding-top: 32px;
+  margin-bottom: 64px;
 }
 .session:last-child {
   margin-bottom: 0;
 }
 .session-label {
-  margin-bottom: 36px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
   display: flex;
   align-items: baseline;
   gap: 24px;
@@ -470,7 +469,7 @@ video {
 .session-label .name {
   font-family: var(--serif-display);
   font-size: 32px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
   letter-spacing: -0.005em;
 }
@@ -520,24 +519,55 @@ video {
   font-weight: 600;
   margin-bottom: 16px;
 }
+.talk-featured-speaker {
+  font-family: var(--serif-display);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
 .talk-featured h3 {
   font-family: var(--serif-display);
-  font-size: 36px;
+  font-style: italic;
+  font-size: 26px;
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  margin-bottom: 10px;
-  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin-bottom: 18px;
+  color: var(--accent-deep);
 }
 .talk-featured h3 em {
+  /* The whole title is already italic; an inner <em> just stays italic. */
   font-style: italic;
 }
-.talk-speaker {
-  font-family: var(--serif-body);
-  font-style: italic;
+/* Compact internal padding when featured cards sit in a multi-up grid. */
+.talks-featured-grid {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.talks-featured-grid[data-count='2'] {
+  grid-template-columns: repeat(2, 1fr);
+}
+.talks-featured-grid[data-count='3'],
+.talks-featured-grid[data-count='4'] {
+  grid-template-columns: repeat(3, 1fr);
+}
+.talks-featured-grid .talk-featured {
+  padding: 36px 28px;
+  margin-bottom: 0;
+}
+.talks-featured-grid .talk-featured-speaker {
+  font-size: 22px;
+}
+.talks-featured-grid .talk-featured h3 {
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+.talks-featured-grid .talk-summary {
   font-size: 15px;
-  color: var(--ink-soft);
-  margin-bottom: 20px;
 }
 .talk-summary {
   font-size: 16px;
@@ -1424,6 +1454,11 @@ video {
   .photo-tile {
     aspect-ratio: 4 / 3;
   }
+  /* Mid-screens: 3-card sessions drop to 2-up; 2-card stays 2-up. */
+  .talks-featured-grid[data-count='3'],
+  .talks-featured-grid[data-count='4'] {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 900px) {
@@ -1465,11 +1500,25 @@ video {
   .talks-grid {
     grid-template-columns: 1fr;
   }
+  .talks-featured-grid,
+  .talks-featured-grid[data-count='2'],
+  .talks-featured-grid[data-count='3'],
+  .talks-featured-grid[data-count='4'] {
+    grid-template-columns: 1fr;
+  }
   .talk-featured {
     padding: 32px 24px;
   }
-  .talk-featured h3 {
-    font-size: 28px;
+  .talks-featured-grid .talk-featured {
+    padding: 32px 24px;
+  }
+  .talk-featured-speaker,
+  .talks-featured-grid .talk-featured-speaker {
+    font-size: 22px;
+  }
+  .talk-featured h3,
+  .talks-featured-grid .talk-featured h3 {
+    font-size: 24px;
   }
   .session-label .name {
     font-size: 24px;
