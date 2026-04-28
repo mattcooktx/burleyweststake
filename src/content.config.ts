@@ -72,6 +72,11 @@ const campaigns = defineCollection({
       hero_eyebrow: z.preprocess(emptyToUndef, z.string().optional()),
       hero_headline: z.preprocess(emptyToUndef, z.string().optional()),
       hero_subhead: z.preprocess(emptyToUndef, z.string().optional()),
+      // Optional human-readable date label for Collections cards. When set,
+      // overrides the auto-formatted start_date – end_date range so editors
+      // can show actual event dates ("April 18–19, 2026") rather than the
+      // homepage scheduling window.
+      display_dates: z.preprocess(emptyToUndef, z.string().optional()),
       hero_image: z.preprocess(ensureRelativePrefix, image().optional()),
       hero_image_alt: z.preprocess(emptyToUndef, z.string().optional()),
       featured_scripture: z

@@ -40,11 +40,17 @@ export function isPlaceholder(c: Campaign, now: Date = new Date()): boolean {
 
 export function formatDateRange(c: Campaign): string {
   if (isPlaceholder(c)) return 'Coming soon'
-  const fmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-  const start = fmt.format(new Date(c.data.start_date))
-  if (!c.data.end_date) return start
-  const end = fmt.format(new Date(c.data.end_date))
-  return `${start} – ${end}`
+  // Editor-supplied label always wins (e.g., "April 18–19, 2026" — the
+  // actual event dates rather than the homepage scheduling window).
+  if (c.data.display_dates) return c.data.display_dates
+  // Fallback: just month + year of the start_date so we don't leak the
+  // schedule window. UTC parsing avoids local-tz day shifts.
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
+  return fmt.format(new Date(c.data.start_date))
 }
 
 const startMs = (c: Campaign) => new Date(c.data.start_date).getTime()

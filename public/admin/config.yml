@@ -89,6 +89,13 @@ collections:
       - { label: 'Hero headline', name: hero_headline, widget: string, required: false, hint: 'The big italic headline at the top of the campaign page. Optional — leave blank for video-only campaigns.' }
       - { label: 'Hero subhead', name: hero_subhead, widget: text, required: false }
       - {
+          label: 'Display dates label (optional)',
+          name: display_dates,
+          widget: string,
+          required: false,
+          hint: 'Shown on Collections cards. Use the actual event dates here, e.g. "April 18–19, 2026" or "December 2025". Leave blank to show just the start month + year.',
+        }
+      - {
           label: 'Hero image',
           name: hero_image,
           widget: image,

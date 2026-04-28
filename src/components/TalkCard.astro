@@ -1,4 +1,6 @@
 ---
+import { renderTitleHtml } from '../lib/title'
+
 interface Props {
   title: string
   speaker: string
@@ -9,10 +11,11 @@ interface Props {
 const { title, speaker, summary, href } = Astro.props
 const Tag = href ? 'a' : 'div'
 const linkAttrs = href ? { href } : {}
+const titleHtml = renderTitleHtml(title)
 ---
 
 <Tag class="talk-card" {...linkAttrs}>
-  <h4>{title}</h4>
+  <h4 set:html={titleHtml} />
   <div class="speaker">{speaker}</div>
   <p class="summary">{summary}</p>
   {href && <span class="arrow">View →</span>}

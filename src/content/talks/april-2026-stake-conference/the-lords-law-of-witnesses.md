@@ -13,7 +13,7 @@ hero_image: ./images/hero-watchman.jpg
 hero_image_alt: Painting of a watchman blowing a horn from a tower above an ancient city, illustrating Ezekiel 33.
 body:
   - type: heading
-    text: The Lord's *Law of Witnesses*
+    text: Witnesses on the *Wall*
 
   - type: scripture
     reference: Ezekiel 33:2–5

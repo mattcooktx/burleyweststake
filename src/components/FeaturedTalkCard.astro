@@ -1,4 +1,6 @@
 ---
+import { renderTitleHtml } from '../lib/title'
+
 interface Props {
   title: string
   speaker: string
@@ -12,11 +14,12 @@ const Tag = href ? 'a' : 'div'
 // Talk pages are internal — no target=_blank. (External link_url paths used to
 // open in a new tab; they no longer exist on talks now that they're first-class.)
 const linkAttrs = href ? { href } : {}
+const titleHtml = renderTitleHtml(title)
 ---
 
 <Tag class="talk-featured" {...linkAttrs}>
   <div class="talk-meta">{meta}</div>
-  <h3>{title}</h3>
+  <h3 set:html={titleHtml} />
   <div class="talk-speaker">{speaker}</div>
   <p class="talk-summary">{summary}</p>
   {href && <span class="talk-link">View Presentation →</span>}
