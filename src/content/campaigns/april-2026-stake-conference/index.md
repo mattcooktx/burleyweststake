@@ -133,6 +133,6 @@ social_post:
 
 
     4️⃣ Avoid Distractions/The Parable of The Ten Virgins: President Oaks tied distractions to this Parable: “Take care not to become distracted. Remember His parable of the ten virgins.” The five foolish ones weren’t evil — they were distracted. They knew, but didn’t do. Notably, three other apostles have recently taught this parable in General Conference (Elder Bednar three times, plus Elder Rasband and Elder Renlund last year)
-  posted_at: 2026-04-22T19:14:00
+  posted_at: 2026-04-27T19:15:00.000-06:00
   preview_image: images/elder-eyring.png
 ---
