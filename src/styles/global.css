@@ -610,23 +610,26 @@ video {
   border-color: var(--accent-light);
   background: var(--paper-soft);
 }
-.talk-card h4 {
+.talk-card-speaker {
   font-family: var(--serif-display);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
   line-height: 1.2;
-  margin-bottom: 8px;
+  letter-spacing: -0.005em;
   color: var(--ink);
+  margin-bottom: 8px;
+}
+.talk-card h4 {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-bottom: 14px;
+  color: var(--accent-deep);
 }
 .talk-card h4 em {
   font-style: italic;
-}
-.talk-card .speaker {
-  font-family: var(--serif-body);
-  font-style: italic;
-  font-size: 13px;
-  color: var(--ink-faint);
-  margin-bottom: 14px;
 }
 .talk-card .summary {
   font-size: 14px;
@@ -1519,6 +1522,12 @@ video {
   .talk-featured h3,
   .talks-featured-grid .talk-featured h3 {
     font-size: 24px;
+  }
+  .talk-card-speaker {
+    font-size: 18px;
+  }
+  .talk-card h4 {
+    font-size: 16px;
   }
   .session-label .name {
     font-size: 24px;
