@@ -1,4 +1,5 @@
 ---
+import { renderTitleHtml } from '../lib/title'
 import {
   resolveTalkPdfUrl,
   SESSION_LABELS,
@@ -15,12 +16,7 @@ const { talk, campaign } = Astro.props
 const sessionLabel = SESSION_LABELS[talk.data.session] ?? talk.data.session
 const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undefined
 
-// PDF-mode talks always have a pdf field (enforced by schema refine), but
-// guard anyway in case schema validation slips.
-const titleWords = talk.data.title.trim().split(' ')
-const split = Math.max(titleWords.length - 2, 0)
-const titleLead = titleWords.slice(0, split).join(' ')
-const titleEm = titleWords.slice(split).join(' ')
+const titleHtml = renderTitleHtml(talk.data.title)
 ---
 
 <nav class="talk-breadcrumb" aria-label="Breadcrumb">
@@ -33,9 +29,7 @@ const titleEm = titleWords.slice(split).join(' ')
 
 <header class="pdf-talk-header">
   <div class="talk-eyebrow">{sessionLabel} · {talk.data.session_date}</div>
-  <h1 class="talk-title">
-    {titleLead && <>{titleLead} </>}<em>{titleEm}</em>
-  </h1>
+  <h1 class="talk-title" set:html={titleHtml} />
   <div class="talk-byline">{talk.data.speaker}</div>
   {talk.data.speaker_role && <div class="talk-meta-line">{talk.data.speaker_role}</div>}
 </header>

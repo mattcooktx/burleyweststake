@@ -38,6 +38,14 @@ const ensureRelativePrefix = (v: unknown) => {
 const dateToIsoString = (v: unknown) =>
   v instanceof Date ? v.toISOString() : v
 
+const coerceToString = (v: unknown) =>
+  typeof v === 'number' || typeof v === 'boolean' ? String(v) : v
+
+const coerceToOptionalString = (v: unknown) => {
+  if (v === '' || v == null) return undefined
+  return coerceToString(v)
+}
+
 const campaigns = defineCollection({
   loader: glob({
     pattern: '**/*.md',
@@ -127,14 +135,16 @@ const talks = defineCollection({
       }),
       z.object({
         type: z.literal('scripture'),
-        reference: z.string(),
-        attribution: z.preprocess(emptyToUndef, z.string().optional()),
+        reference: z.preprocess(coerceToString, z.string()),
+        attribution: z.preprocess(coerceToOptionalString, z.string().optional()),
         text: z.string(), // paragraph breaks supported via blank lines
       }),
       z.object({
         type: z.literal('quote'),
-        speaker: z.string(),
-        source: z.preprocess(emptyToUndef, z.string().optional()),
+        speaker: z.preprocess(coerceToString, z.string()),
+        // Editors may type a bare year like "2017" which YAML parses as a
+        // number; coerce to string so the schema stays happy.
+        source: z.preprocess(coerceToOptionalString, z.string().optional()),
         text: z.string(), // *word* -> <em> with gold highlight via .quote-block CSS
       }),
       z.object({

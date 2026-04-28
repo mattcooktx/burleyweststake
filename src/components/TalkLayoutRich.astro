@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets'
 import TalkBody from './body/TalkBody.astro'
+import { renderTitleHtml } from '../lib/title'
 import {
   resolveTalkPdfUrl,
   SESSION_LABELS,
@@ -16,11 +17,7 @@ interface Props {
 const { talk, campaign } = Astro.props
 const sessionLabel = SESSION_LABELS[talk.data.session] ?? talk.data.session
 
-// Italicize the last 2 words of the title (matches the v2 mockup's emphasis pattern).
-const titleWords = talk.data.title.trim().split(' ')
-const split = Math.max(titleWords.length - 2, 0)
-const titleLead = titleWords.slice(0, split).join(' ')
-const titleEm = titleWords.slice(split).join(' ')
+const titleHtml = renderTitleHtml(talk.data.title)
 
 const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undefined
 ---
@@ -35,9 +32,7 @@ const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undef
 
 <section class="talk-hero">
   <div class="talk-eyebrow">{sessionLabel} · {talk.data.session_date}</div>
-  <h1 class="talk-title">
-    {titleLead && <>{titleLead} </>}<em>{titleEm}</em>
-  </h1>
+  <h1 class="talk-title" set:html={titleHtml} />
   <div class="talk-byline">{talk.data.speaker}</div>
   {talk.data.speaker_role && <div class="talk-meta-line">{talk.data.speaker_role}</div>}
 </section>

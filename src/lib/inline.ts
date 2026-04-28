@@ -1,12 +1,19 @@
 /**
  * Tiny inline-emphasis helper for talk-body block text.
  *
- * Converts `*word*` to <em>word</em>. Escapes everything else so authored
- * content can't inject markup. Paragraph splits are handled by the caller
- * (split on blank-line, then run each paragraph through `inlineEmphasis`).
+ * Converts `**bold**` → <strong> and `*italic*` → <em>. Bold runs first so
+ * the substitutions don't interfere. Everything else is HTML-escaped so
+ * authored content can't inject markup.
+ *
+ * In quote-block contexts, the existing CSS turns <em> into a bold gold-
+ * highlight (font-style: normal; weight 600; gradient background). In
+ * other contexts <em> renders as the browser default italic.
  */
 export function inlineEmphasis(text: string): string {
-  return escapeHtml(text).replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
+  const escaped = escapeHtml(text)
+  return escaped
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
 }
 
 /** Split paragraphs on blank lines and emphasize each. Returns HTML string. */
