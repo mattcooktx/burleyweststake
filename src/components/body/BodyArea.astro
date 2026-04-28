@@ -1,0 +1,15 @@
+---
+import { inlineEmphasis } from '../../lib/inline'
+
+interface Props {
+  numeral: string
+  text: string
+}
+
+const { numeral, text } = Astro.props
+---
+
+<div class="area-marker">
+  <span class="num">{numeral}</span>
+  <h3 set:html={inlineEmphasis(text)} />
+</div>

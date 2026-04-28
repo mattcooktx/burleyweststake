@@ -1,7 +1,7 @@
 ---
 import SessionBlock from './SessionBlock.astro'
 import CollectionsSidebar from './CollectionsSidebar.astro'
-import type { Campaign } from '../lib/campaigns'
+import { getTalksForCampaign, groupTalksBySession, type Campaign } from '../lib/campaigns'
 
 interface Props {
   campaign: Campaign
@@ -10,9 +10,8 @@ interface Props {
 
 const { campaign, withSidebar = false } = Astro.props
 
-const sessions = [...(campaign.data.talks ?? [])].sort(
-  (a, b) => a.session_order - b.session_order,
-)
+const talks = await getTalksForCampaign(campaign.id)
+const sessions = groupTalksBySession(talks)
 ---
 
 <section class="main-section" id="talks">
@@ -27,14 +26,13 @@ const sessions = [...(campaign.data.talks ?? [])].sort(
       </div>
 
       {
-        sessions.map((session) => (
-          <SessionBlock
-            campaignId={campaign.id}
-            session={session.session}
-            sessionDate={session.session_date}
-            items={session.items}
-          />
-        ))
+        sessions.length === 0 ? (
+          <p class="empty-state">No talks have been published for this campaign yet.</p>
+        ) : (
+          sessions.map((s) => (
+            <SessionBlock label={s.label} date={s.date} talks={s.talks} />
+          ))
+        )
       }
     </div>
 

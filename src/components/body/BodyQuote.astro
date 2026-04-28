@@ -1,0 +1,18 @@
+---
+import { paragraphsHtml } from '../../lib/inline'
+
+interface Props {
+  speaker: string
+  source?: string
+  text: string
+}
+
+const { speaker, source, text } = Astro.props
+---
+
+<div class="quote-block">
+  <div class="speaker">
+    {speaker}{source && <> · {source}</>}
+  </div>
+  <blockquote set:html={paragraphsHtml(text)} />
+</div>

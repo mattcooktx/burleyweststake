@@ -1,48 +1,39 @@
 ---
 import FeaturedTalkCard from './FeaturedTalkCard.astro'
 import TalkCard from './TalkCard.astro'
-import { resolveTalkLink } from '../lib/campaigns'
-
-interface TalkItem {
-  title: string
-  speaker: string
-  summary: string
-  pdf?: string
-  link_url?: string
-  featured: boolean
-}
+import { talkUrl, type Talk } from '../lib/campaigns'
 
 interface Props {
-  campaignId: string
-  session: string
-  sessionDate: string
-  items: TalkItem[]
+  label: string
+  date: string
+  talks: Talk[]
 }
 
-const { campaignId, session, sessionDate, items } = Astro.props
+const { label, date, talks } = Astro.props
 
-const featured = items.filter((it) => it.featured)
-const standard = items.filter((it) => !it.featured)
+const featured = talks.filter((t) => t.data.featured)
+const standard = talks.filter((t) => !t.data.featured)
 
-const sessionWords = session.trim().split(' ')
-const firstWord = sessionWords[0]
-const restOfSession = sessionWords.slice(1).join(' ')
+// Italicize first word of session label (e.g., "General" Session) per the prototype.
+const labelWords = label.trim().split(' ')
+const firstWord = labelWords[0]
+const restOfLabel = labelWords.slice(1).join(' ')
 ---
 
 <div class="session">
   <div class="session-label">
-    <span class="name"><em>{firstWord}</em>{restOfSession ? ` ${restOfSession}` : ''}</span>
-    <span class="date">{sessionDate}</span>
+    <span class="name"><em>{firstWord}</em>{restOfLabel ? ` ${restOfLabel}` : ''}</span>
+    <span class="date">{date}</span>
   </div>
 
   {
-    featured.map((item) => (
+    featured.map((talk) => (
       <FeaturedTalkCard
-        title={item.title}
-        speaker={item.speaker}
-        summary={item.summary}
-        href={resolveTalkLink(campaignId, item)}
-        meta={`${item.speaker.startsWith('President') ? 'Stake President' : 'Speaker'} · Featured`}
+        title={talk.data.title}
+        speaker={talk.data.speaker}
+        summary={talk.data.teaser}
+        href={talkUrl(talk)}
+        meta={`${talk.data.speaker_role ?? talk.data.speaker} · Featured`}
       />
     ))
   }
@@ -50,12 +41,12 @@ const restOfSession = sessionWords.slice(1).join(' ')
   {
     standard.length > 0 && (
       <div class="talks-grid">
-        {standard.map((item) => (
+        {standard.map((talk) => (
           <TalkCard
-            title={item.title}
-            speaker={item.speaker}
-            summary={item.summary}
-            href={resolveTalkLink(campaignId, item)}
+            title={talk.data.title}
+            speaker={talk.data.speaker}
+            summary={talk.data.teaser}
+            href={talkUrl(talk)}
           />
         ))}
       </div>

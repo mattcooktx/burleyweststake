@@ -96,54 +96,6 @@ collections:
           - { label: 'Quote', name: text, widget: text }
           - { label: 'Reference', name: reference, widget: string, hint: 'Example: 2 Nephi 32:3' }
 
-      - label: 'Sessions & talks'
-        name: talks
-        widget: list
-        required: false
-        summary: '{{fields.session}} — {{fields.session_date}}'
-        fields:
-          - { label: 'Session name', name: session, widget: string, hint: 'Example: "General Session"' }
-          - { label: 'Session date label', name: session_date, widget: string, hint: 'Free-form. Example: "Sunday · April 19"' }
-          - {
-              label: 'Display order',
-              name: session_order,
-              widget: number,
-              value_type: int,
-              default: 1,
-              hint: 'Sessions display in ascending order by this number.',
-            }
-          - label: 'Talks in this session'
-            name: items
-            widget: list
-            summary: '{{fields.title}} — {{fields.speaker}}'
-            fields:
-              - { label: 'Title', name: title, widget: string }
-              - { label: 'Speaker', name: speaker, widget: string }
-              - { label: 'Summary', name: summary, widget: text }
-              - {
-                  label: 'PDF',
-                  name: pdf,
-                  widget: file,
-                  required: false,
-                  media_folder: 'pdfs',
-                  public_folder: './pdfs',
-                  hint: 'Upload the talk PDF. Preferred over external link.',
-                }
-              - {
-                  label: 'External link (fallback only)',
-                  name: link_url,
-                  widget: string,
-                  required: false,
-                  hint: 'Use ONLY when there is no PDF (e.g., a YouTube recording).',
-                }
-              - {
-                  label: 'Featured talk?',
-                  name: featured,
-                  widget: boolean,
-                  default: false,
-                  hint: 'Featured talks render as the prominent large card with the gold accent rule.',
-                }
-
       - label: 'Photo gallery'
         name: photo_gallery
         widget: object
@@ -191,6 +143,272 @@ collections:
           default: false,
           required: false,
           hint: 'Check to keep this campaign hidden until ready.',
+        }
+
+  # ============================================================
+  # TALKS — first-class collection, one folder per campaign slug.
+  # ============================================================
+  - name: talks
+    label: Talks
+    label_singular: Talk
+    description: 'Individual talks. Each talk gets its own page at /campaigns/<campaign>/talks/<talk>/.'
+    folder: src/content/talks
+    # Keep talks grouped by campaign on disk: <campaign-slug>/<talk-slug>.md
+    # The CMS collection lists talks across all campaigns flat, but the
+    # `campaign` frontmatter field controls the on-disk folder.
+    path: '{{fields.campaign}}/{{slug}}'
+    media_folder: '{{fields.campaign}}'
+    public_folder: ''
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    identifier_field: title
+    summary: '{{title}} — {{speaker}}'
+    fields:
+      - { label: 'Title', name: title, widget: string }
+      - {
+          label: 'URL slug',
+          name: slug,
+          widget: string,
+          hint: 'Lowercase letters and hyphens only. Becomes the URL: /campaigns/<campaign>/talks/<slug>/.',
+        }
+      - { label: 'Speaker', name: speaker, widget: string }
+      - {
+          label: 'Speaker role',
+          name: speaker_role,
+          widget: string,
+          required: false,
+          hint: 'Example: "Stake Presidency", "High Council", "Visiting Authority".',
+        }
+      - {
+          label: 'Campaign',
+          name: campaign,
+          widget: relation,
+          collection: campaigns,
+          search_fields: ['title', 'slug'],
+          value_field: 'slug',
+          display_fields: ['title'],
+          hint: 'The stake conference, Holy Week, or other campaign this talk belongs to.',
+        }
+      - label: 'Session'
+        name: session
+        widget: select
+        options:
+          - { label: 'General Session', value: general }
+          - { label: 'Adult Session', value: adult }
+          - { label: 'Leadership Session', value: leadership }
+          - { label: 'Priesthood Leadership Meeting', value: priesthood }
+          - { label: 'Youth Session', value: youth }
+          - { label: 'Other', value: other }
+      - {
+          label: 'Session date label',
+          name: session_date,
+          widget: string,
+          hint: 'Free-form. Example: "Sunday, April 19".',
+        }
+      - {
+          label: 'Display order within session',
+          name: session_order,
+          widget: number,
+          value_type: int,
+          default: 1,
+          hint: 'Lower numbers appear first within a session.',
+        }
+      - {
+          label: 'Featured?',
+          name: featured,
+          widget: boolean,
+          default: false,
+          hint: 'Featured talks render as the large prominent card on the homepage. Stake Presidency talks are typically featured.',
+        }
+      - {
+          label: 'Teaser',
+          name: teaser,
+          widget: text,
+          hint: 'One-sentence summary shown on the homepage card.',
+        }
+      - label: 'Layout'
+        name: layout
+        widget: select
+        options:
+          - { label: 'Rich (full talk page with body content)', value: rich }
+          - { label: 'PDF only (embedded PDF, no body)', value: pdf }
+        default: pdf
+        hint: 'Rich = the speaker provided a full outline you transcribe with structured blocks. PDF = upload the file and embed it.'
+      - {
+          label: 'PDF',
+          name: pdf,
+          widget: file,
+          required: false,
+          media_folder: '',
+          public_folder: '',
+          hint: 'Required for PDF-only mode. Optional for Rich mode (renders as a "Download the Outline" CTA at the bottom).',
+        }
+      - {
+          label: 'Hero image (Rich mode)',
+          name: hero_image,
+          widget: image,
+          required: false,
+          media_folder: '',
+          public_folder: '',
+          hint: 'Large image displayed below the title. Only used in Rich mode.',
+        }
+      - {
+          label: 'Hero image alt text',
+          name: hero_image_alt,
+          widget: string,
+          required: false,
+        }
+
+      - label: 'Body (Rich mode only — typed blocks)'
+        name: body
+        widget: list
+        required: false
+        typeKey: type
+        types:
+          - label: 'Heading'
+            name: heading
+            widget: object
+            summary: 'Heading: {{fields.text}}'
+            fields:
+              - {
+                  label: 'Text',
+                  name: text,
+                  widget: string,
+                  hint: 'Section title. Wrap words in *asterisks* for italic emphasis.',
+                }
+          - label: 'Numbered Area Marker (i., ii., iii., …)'
+            name: area
+            widget: object
+            summary: '{{fields.numeral}} {{fields.text}}'
+            fields:
+              - { label: 'Numeral', name: numeral, widget: string, hint: 'e.g., "i.", "ii.", "iii.", "iv."' }
+              - {
+                  label: 'Text',
+                  name: text,
+                  widget: string,
+                  hint: 'Section heading next to the numeral. Wrap words in *asterisks* for italic emphasis.',
+                }
+          - label: 'Subheading (small uppercase eyebrow)'
+            name: subheading
+            widget: object
+            summary: 'Subheading: {{fields.text}}'
+            fields:
+              - { label: 'Text', name: text, widget: string }
+          - label: 'Scripture quote (gold-accent border)'
+            name: scripture
+            widget: object
+            summary: 'Scripture: {{fields.reference}}'
+            fields:
+              - { label: 'Reference', name: reference, widget: string, hint: 'e.g., "Ezekiel 33:2-5"' }
+              - {
+                  label: 'Attribution',
+                  name: attribution,
+                  widget: string,
+                  required: false,
+                  hint: 'Optional. e.g., "The Apostle Paul"',
+                }
+              - {
+                  label: 'Text',
+                  name: text,
+                  widget: text,
+                  hint: 'Use blank lines for paragraph breaks.',
+                }
+          - label: 'Speaker quote (cream-accent border)'
+            name: quote
+            widget: object
+            summary: 'Quote: {{fields.speaker}}'
+            fields:
+              - { label: 'Speaker', name: speaker, widget: string, hint: 'e.g., "President Russell M. Nelson"' }
+              - {
+                  label: 'Source',
+                  name: source,
+                  widget: string,
+                  required: false,
+                  hint: 'Optional. e.g., "April 2026 General Conference"',
+                }
+              - {
+                  label: 'Text',
+                  name: text,
+                  widget: text,
+                  hint: 'Wrap words in *asterisks* for the bold gold-highlight emphasis. Blank lines = paragraph breaks.',
+                }
+          - label: 'Inline graphic (image)'
+            name: graphic
+            widget: object
+            summary: 'Graphic: {{fields.alt}}'
+            fields:
+              - {
+                  label: 'Image',
+                  name: image,
+                  widget: image,
+                  media_folder: '',
+                  public_folder: '',
+                  hint: 'Displays full column width. Use for quote tiles or other inline graphics.',
+                }
+              - { label: 'Alt text', name: alt, widget: string }
+              - {
+                  label: 'Caption',
+                  name: caption,
+                  widget: string,
+                  required: false,
+                  hint: 'Optional small caption below the image.',
+                }
+          - label: 'Bullet list'
+            name: list
+            widget: object
+            summary: 'List ({{fields.items.length}} items)'
+            fields:
+              - {
+                  label: 'Intro (optional)',
+                  name: intro,
+                  widget: string,
+                  required: false,
+                  hint: 'Optional lead-in text shown above the list.',
+                }
+              - label: 'Items'
+                name: items
+                widget: list
+                fields:
+                  - {
+                      label: 'Text',
+                      name: text,
+                      widget: string,
+                      hint: 'Wrap words in *asterisks* for italic emphasis.',
+                    }
+                  - label: 'Sub-items (optional)'
+                    name: nested
+                    widget: list
+                    required: false
+                    field: { label: 'Sub-bullet text', name: '', widget: string }
+          - label: 'Three-dot ornament divider'
+            name: ornament
+            widget: object
+            summary: 'Ornament divider'
+            fields:
+              - {
+                  label: 'Note',
+                  name: note,
+                  widget: hidden,
+                  default: '',
+                }
+
+      - {
+          label: 'OG image override (optional)',
+          name: og_image,
+          widget: image,
+          required: false,
+          media_folder: '',
+          public_folder: '',
+          hint: 'Optional. Image used for share-preview cards. Defaults to the hero image, then to the campaign hero.',
+        }
+
+      - {
+          label: 'Draft (hide from site)',
+          name: draft,
+          widget: boolean,
+          default: false,
+          required: false,
         }
 
   # ============================================================

@@ -62,28 +62,7 @@ const campaigns = defineCollection({
           reference: z.string(),
         })
         .optional(),
-      talks: z
-        .array(
-          z.object({
-            session: z.string(),
-            session_date: z.string(),
-            session_order: z.number().int().nonnegative(),
-            items: z.array(
-              z.object({
-                title: z.string(),
-                speaker: z.string(),
-                summary: z.string(),
-                pdf: z.preprocess(
-                  (v) => ensureRelativePrefix(emptyToUndef(v)),
-                  z.string().optional(),
-                ),
-                link_url: z.preprocess(emptyToUndef, z.string().url().optional()),
-                featured: z.boolean().default(false),
-              }),
-            ),
-          }),
-        )
-        .default([]),
+      // Talks moved to their own first-class collection (src/content/talks/).
       photo_gallery: z
         .object({
           title: z.string().default('Photos from the Linger Longer'),
@@ -107,6 +86,116 @@ const campaigns = defineCollection({
     }),
 })
 
+// ============================================================
+// TALKS — first-class collection (was: nested in campaign frontmatter)
+// ============================================================
+
+export const SESSION_KEYS = [
+  'general',
+  'adult',
+  'leadership',
+  'priesthood',
+  'youth',
+  'other',
+] as const
+
+const talks = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/talks',
+    // ID format: "<campaign-slug>/<talk-slug>". Drives the URL
+    // /campaigns/<campaign-slug>/talks/<talk-slug>/ and the campaign association.
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: ({ image }) => {
+    // Discriminated union of body block types. Each block's `type` literal
+    // matches the discriminator the CMS list-with-types widget emits.
+    const block = z.discriminatedUnion('type', [
+      z.object({
+        type: z.literal('heading'),
+        // Inline italic via *word*; rendered by BodyHeading.astro.
+        text: z.string(),
+      }),
+      z.object({
+        type: z.literal('area'),
+        numeral: z.string(), // 'i.', 'ii.', 'iii.', 'iv.'
+        text: z.string(),
+      }),
+      z.object({
+        type: z.literal('subheading'),
+        text: z.string(),
+      }),
+      z.object({
+        type: z.literal('scripture'),
+        reference: z.string(),
+        attribution: z.preprocess(emptyToUndef, z.string().optional()),
+        text: z.string(), // paragraph breaks supported via blank lines
+      }),
+      z.object({
+        type: z.literal('quote'),
+        speaker: z.string(),
+        source: z.preprocess(emptyToUndef, z.string().optional()),
+        text: z.string(), // *word* -> <em> with gold highlight via .quote-block CSS
+      }),
+      z.object({
+        type: z.literal('graphic'),
+        image: z.preprocess(ensureRelativePrefix, image()),
+        alt: z.string(),
+        caption: z.preprocess(emptyToUndef, z.string().optional()),
+      }),
+      z.object({
+        type: z.literal('list'),
+        intro: z.preprocess(emptyToUndef, z.string().optional()),
+        items: z.array(
+          z.union([
+            z.string(),
+            z.object({
+              text: z.string(),
+              nested: z.array(z.string()).optional(),
+            }),
+          ]),
+        ),
+      }),
+      z.object({
+        type: z.literal('ornament'),
+      }),
+    ])
+
+    return z
+      .object({
+        title: z.string(),
+        speaker: z.string(),
+        speaker_role: z.preprocess(emptyToUndef, z.string().optional()),
+        campaign: z.string(), // slug of the parent campaign (matches folder name)
+        session: z.enum(SESSION_KEYS),
+        session_date: z.string(), // human-readable, e.g., "Sunday, April 19"
+        session_order: z.preprocess(emptyToUndef, z.number().int().default(99)),
+        featured: z.boolean().default(false),
+        teaser: z.string(), // 1-sentence summary for homepage card
+        layout: z.enum(['rich', 'pdf']),
+        pdf: z.preprocess(
+          (v) => ensureRelativePrefix(emptyToUndef(v)),
+          z.string().optional(),
+        ),
+        // Mode A (rich) only:
+        hero_image: z.preprocess(ensureRelativePrefix, image().optional()),
+        hero_image_alt: z.preprocess(emptyToUndef, z.string().optional()),
+        body: z.array(block).optional(),
+        // SEO/OG override:
+        og_image: z.preprocess(ensureRelativePrefix, image().optional()),
+        draft: z.boolean().default(false),
+      })
+      .refine((data) => (data.layout === 'pdf' ? !!data.pdf : true), {
+        message: 'PDF-mode talks must have a `pdf` field',
+        path: ['pdf'],
+      })
+      .refine(
+        (data) => (data.layout === 'rich' ? !!data.body && data.body.length > 0 : true),
+        { message: 'Rich-mode talks must have at least one body block', path: ['body'] },
+      )
+  },
+})
+
 const categories = defineCollection({
   loader: file('./src/content/categories.yaml'),
   schema: ({ image }) =>
@@ -118,4 +207,4 @@ const categories = defineCollection({
     }),
 })
 
-export const collections = { campaigns, categories }
+export const collections = { campaigns, categories, talks }

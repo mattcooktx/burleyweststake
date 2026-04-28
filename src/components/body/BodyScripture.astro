@@ -1,0 +1,18 @@
+---
+import { paragraphsHtml } from '../../lib/inline'
+
+interface Props {
+  reference: string
+  attribution?: string
+  text: string
+}
+
+const { reference, attribution, text } = Astro.props
+---
+
+<div class="scripture-block">
+  <div class="ref">
+    {reference}{attribution && <> · {attribution}</>}
+  </div>
+  <blockquote set:html={paragraphsHtml(text)} />
+</div>

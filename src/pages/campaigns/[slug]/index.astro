@@ -1,12 +1,12 @@
 ---
 import { getCollection } from 'astro:content'
 import { getImage } from 'astro:assets'
-import Base from '../../layouts/Base.astro'
-import Hero from '../../components/Hero.astro'
-import TalksSection from '../../components/TalksSection.astro'
-import PhotoTeaser from '../../components/PhotoTeaser.astro'
-import ScriptureBand from '../../components/ScriptureBand.astro'
-import { isPlaceholder, type Campaign } from '../../lib/campaigns'
+import Base from '../../../layouts/Base.astro'
+import Hero from '../../../components/Hero.astro'
+import TalksSection from '../../../components/TalksSection.astro'
+import PhotoTeaser from '../../../components/PhotoTeaser.astro'
+import ScriptureBand from '../../../components/ScriptureBand.astro'
+import { getTalksForCampaign, isPlaceholder, type Campaign } from '../../../lib/campaigns'
 import type { GetStaticPaths } from 'astro'
 
 export const getStaticPaths = (async () => {
@@ -30,11 +30,10 @@ const navMap: Record<string, 'stake-conference' | 'holy-week' | 'christmas' | 'c
   christmas: 'christmas',
 }
 const current = navMap[campaign.data.category] ?? 'collections'
-const hasTalks = (campaign.data.talks?.length ?? 0) > 0
 
-// Pre-resolve a 1200-wide JPEG for share-preview crawlers (which can't
-// follow Astro's <picture>/srcset). Falls through to the default OG image
-// when the campaign has no hero of its own.
+const talks = await getTalksForCampaign(campaign.id)
+const hasTalks = talks.length > 0
+
 let ogImage: string | undefined
 if (campaign.data.hero_image) {
   const img = await getImage({ src: campaign.data.hero_image, width: 1200, format: 'jpeg' })

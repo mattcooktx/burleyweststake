@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets'
+import TalkBody from './body/TalkBody.astro'
+import {
+  resolveTalkPdfUrl,
+  SESSION_LABELS,
+  type Campaign,
+  type Talk,
+} from '../lib/campaigns'
+
+interface Props {
+  talk: Talk
+  campaign: Campaign
+}
+
+const { talk, campaign } = Astro.props
+const sessionLabel = SESSION_LABELS[talk.data.session] ?? talk.data.session
+
+// Italicize the last 2 words of the title (matches the v2 mockup's emphasis pattern).
+const titleWords = talk.data.title.trim().split(' ')
+const split = Math.max(titleWords.length - 2, 0)
+const titleLead = titleWords.slice(0, split).join(' ')
+const titleEm = titleWords.slice(split).join(' ')
+
+const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undefined
+---
+
+<nav class="talk-breadcrumb" aria-label="Breadcrumb">
+  <a href={`/campaigns/${campaign.id}/`}>{campaign.data.title}</a>
+  <span class="sep">/</span>
+  <span>{sessionLabel}</span>
+  <span class="sep">/</span>
+  <span>{talk.data.title}</span>
+</nav>
+
+<section class="talk-hero">
+  <div class="talk-eyebrow">{sessionLabel} · {talk.data.session_date}</div>
+  <h1 class="talk-title">
+    {titleLead && <>{titleLead} </>}<em>{titleEm}</em>
+  </h1>
+  <div class="talk-byline">{talk.data.speaker}</div>
+  {talk.data.speaker_role && <div class="talk-meta-line">{talk.data.speaker_role}</div>}
+</section>
+
+{
+  talk.data.hero_image && (
+    <div class="talk-hero-image">
+      <figure>
+        <Image
+          src={talk.data.hero_image}
+          alt={talk.data.hero_image_alt ?? ''}
+          widths={[640, 960, 1280, 1600]}
+          sizes="(max-width: 1100px) 100vw, 1100px"
+          loading="eager"
+        />
+      </figure>
+    </div>
+  )
+}
+
+<article class="talk-body">
+  {talk.data.body && <TalkBody blocks={talk.data.body} />}
+
+  {
+    pdfUrl && (
+      <div class="pdf-cta">
+        <h4>Download the Outline</h4>
+        <p>
+          A printable summary of the scriptures, quotations, and references shared in this talk.
+        </p>
+        <a href={pdfUrl} target="_blank" rel="noopener">
+          Download PDF
+        </a>
+      </div>
+    )
+  }
+</article>
+
+<div class="back-link">
+  <a href={`/campaigns/${campaign.id}/`}>← Back to {campaign.data.title}</a>
+</div>

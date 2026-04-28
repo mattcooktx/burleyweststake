@@ -9,7 +9,9 @@ interface Props {
 
 const { title, speaker, summary, href, meta = 'Featured' } = Astro.props
 const Tag = href ? 'a' : 'div'
-const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {}
+// Talk pages are internal — no target=_blank. (External link_url paths used to
+// open in a new tab; they no longer exist on talks now that they're first-class.)
+const linkAttrs = href ? { href } : {}
 ---
 
 <Tag class="talk-featured" {...linkAttrs}>

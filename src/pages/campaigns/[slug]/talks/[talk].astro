@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content'
+import { getImage } from 'astro:assets'
+import Base from '../../../../layouts/Base.astro'
+import TalkLayoutRich from '../../../../components/TalkLayoutRich.astro'
+import TalkLayoutPdf from '../../../../components/TalkLayoutPdf.astro'
+import {
+  SESSION_LABELS,
+  type Campaign,
+  type Talk,
+} from '../../../../lib/campaigns'
+import type { GetStaticPaths } from 'astro'
+
+export const getStaticPaths = (async () => {
+  const [talks, campaigns] = await Promise.all([
+    getCollection('talks'),
+    getCollection('campaigns'),
+  ])
+  const campaignMap = new Map(campaigns.map((c) => [c.id, c]))
+
+  return talks
+    .filter((t) => !t.data.draft && campaignMap.has(t.data.campaign))
+    .map((t) => {
+      const [campaignSlug, talkSlug] = t.id.split('/')
+      const campaign = campaignMap.get(t.data.campaign)!
+      return {
+        params: { slug: campaignSlug, talk: talkSlug },
+        props: { talk: t, campaign },
+      }
+    })
+}) satisfies GetStaticPaths
+
+interface Props {
+  talk: Talk
+  campaign: Campaign
+}
+
+const { talk, campaign } = Astro.props as Props
+
+const navMap: Record<string, 'stake-conference' | 'holy-week' | 'christmas' | 'collections'> = {
+  'stake-conference': 'stake-conference',
+  'holy-week': 'holy-week',
+  christmas: 'christmas',
+}
+const current = navMap[campaign.data.category] ?? 'collections'
+
+// Per the brief: talk pages get OG metadata reflecting their content.
+// Override image is talk.og_image > talk.hero_image > campaign.hero_image > default.
+let ogImage: string | undefined
+const ogSource = talk.data.og_image ?? talk.data.hero_image ?? campaign.data.hero_image
+if (ogSource) {
+  const img = await getImage({ src: ogSource, width: 1200, format: 'jpeg' })
+  ogImage = img.src
+}
+
+const sessionLabel = SESSION_LABELS[talk.data.session] ?? talk.data.session
+const ogTitle = `${talk.data.title} — ${sessionLabel}`
+---
+
+<Base
+  current={current}
+  title={talk.data.title}
+  description={talk.data.teaser}
+  meta={{
+    ogTitle,
+    ogType: 'article',
+    ogImage,
+  }}
+>
+  {
+    talk.data.layout === 'rich' ? (
+      <TalkLayoutRich talk={talk} campaign={campaign} />
+    ) : (
+      <TalkLayoutPdf talk={talk} campaign={campaign} />
+    )
+  }
+</Base>

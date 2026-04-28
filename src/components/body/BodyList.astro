@@ -1,0 +1,46 @@
+---
+import { inlineEmphasis } from '../../lib/inline'
+
+interface ListItem {
+  text: string
+  nested?: string[]
+}
+
+interface Props {
+  intro?: string
+  items: Array<string | ListItem>
+}
+
+const { intro, items } = Astro.props
+
+const normalized: ListItem[] = items.map((it) =>
+  typeof it === 'string' ? { text: it } : it,
+)
+---
+
+{intro && <p class="list-intro" set:html={inlineEmphasis(intro)} />}
+<ul>
+  {
+    normalized.map((it) => (
+      <li>
+        <span set:html={inlineEmphasis(it.text)} />
+        {it.nested && it.nested.length > 0 && (
+          <ul class="nested">
+            {it.nested.map((n) => (
+              <li set:html={inlineEmphasis(n)} />
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .list-intro {
+    margin: 16px 0 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+</style>

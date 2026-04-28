@@ -2,35 +2,34 @@ import { getCollection, type CollectionEntry } from 'astro:content'
 
 export type Campaign = CollectionEntry<'campaigns'>
 export type Category = CollectionEntry<'categories'>
+export type Talk = CollectionEntry<'talks'>
 
-const pdfUrls = import.meta.glob<string>('/src/content/campaigns/**/pdfs/*.pdf', {
+// Vite glob picks up every PDF anywhere under src/content/. Built filenames
+// are content-hashed (/_astro/<name>.<hash>.pdf) so this works in production.
+const pdfUrls = import.meta.glob<string>('/src/content/**/*.pdf', {
   query: '?url',
   import: 'default',
   eager: true,
 })
 
 /**
- * Resolve a campaign-relative PDF path (e.g. "./pdfs/foo.pdf") to a built URL.
- * Returns undefined if the file doesn't exist in the bundle.
+ * Resolve a markdown-relative PDF path (e.g. "./feast.pdf") to a built URL.
+ * `entryDir` is the absolute-from-repo-root directory containing the markdown.
  */
-export function resolvePdfUrl(campaignId: string, relativePath: string): string | undefined {
+function resolvePdfFromDir(entryDir: string, relativePath: string): string | undefined {
   const cleaned = relativePath.replace(/^\.\//, '')
-  const fullPath = `/src/content/campaigns/${campaignId}/${cleaned}`
-  return pdfUrls[fullPath]
+  return pdfUrls[`${entryDir}/${cleaned}`]
 }
 
-/**
- * Best link for a talk: PDF if present, else external link_url, else undefined.
- */
-export function resolveTalkLink(
-  campaignId: string,
-  talk: { pdf?: string; link_url?: string },
-): string | undefined {
-  if (talk.pdf) {
-    const url = resolvePdfUrl(campaignId, talk.pdf)
-    if (url) return url
-  }
-  return talk.link_url
+/** Resolve a campaign-relative PDF path (legacy seed data still uses this). */
+export function resolvePdfUrl(campaignId: string, relativePath: string): string | undefined {
+  return resolvePdfFromDir(`/src/content/campaigns/${campaignId}`, relativePath)
+}
+
+/** Resolve a talk-relative PDF path. talkId = "<campaign-slug>/<talk-slug>". */
+export function resolveTalkPdfUrl(talkId: string, relativePath: string): string | undefined {
+  const campaignSlug = talkId.split('/')[0]
+  return resolvePdfFromDir(`/src/content/talks/${campaignSlug}`, relativePath)
 }
 
 const isPublished = (c: Campaign) => !c.data.draft
@@ -77,6 +76,82 @@ export async function getCampaignsByCategory(category: string): Promise<Campaign
     .filter((c) => c.data.category === category)
     .sort((a, b) => endMs(b) - endMs(a))
 }
+
+// ============================================================
+// Talks
+// ============================================================
+
+export const SESSION_LABELS: Record<string, string> = {
+  general: 'General Session',
+  adult: 'Adult Session',
+  leadership: 'Leadership Session',
+  priesthood: 'Priesthood Leadership Meeting',
+  youth: 'Youth Session',
+  other: 'Other',
+}
+
+// Display order for sessions on the homepage and breadcrumb. Lower = earlier.
+const SESSION_DISPLAY_ORDER: Record<string, number> = {
+  general: 1,
+  adult: 2,
+  leadership: 3,
+  priesthood: 4,
+  youth: 5,
+  other: 99,
+}
+
+const isPublishedTalk = (t: Talk) => !t.data.draft
+
+/** All talks for a campaign, sorted by session then session_order within session. */
+export async function getTalksForCampaign(campaignSlug: string): Promise<Talk[]> {
+  const all = (await getCollection('talks')).filter(isPublishedTalk)
+  return all
+    .filter((t) => t.data.campaign === campaignSlug)
+    .sort((a, b) => {
+      const sa = SESSION_DISPLAY_ORDER[a.data.session] ?? 99
+      const sb = SESSION_DISPLAY_ORDER[b.data.session] ?? 99
+      if (sa !== sb) return sa - sb
+      return a.data.session_order - b.data.session_order
+    })
+}
+
+export interface SessionGroup {
+  key: string
+  label: string
+  date: string
+  order: number
+  talks: Talk[]
+}
+
+/** Group talks by session, preserving session ordering. */
+export function groupTalksBySession(talks: Talk[]): SessionGroup[] {
+  const groups = new Map<string, SessionGroup>()
+  for (const talk of talks) {
+    const key = talk.data.session
+    if (!groups.has(key)) {
+      groups.set(key, {
+        key,
+        label: SESSION_LABELS[key] ?? key,
+        date: talk.data.session_date,
+        order: SESSION_DISPLAY_ORDER[key] ?? 99,
+        talks: [],
+      })
+    }
+    groups.get(key)!.talks.push(talk)
+  }
+  return [...groups.values()].sort((a, b) => a.order - b.order)
+}
+
+/** URL for a talk page. */
+export function talkUrl(talk: Talk): string {
+  // talk.id is "<campaign-slug>/<talk-slug>"; route is /campaigns/<c>/talks/<t>/.
+  const [campaign, slug] = talk.id.split('/')
+  return `/campaigns/${campaign}/talks/${slug}/`
+}
+
+// ============================================================
+// Categories
+// ============================================================
 
 export interface CategoryWithCount extends Category {
   campaignCount: number

@@ -1,0 +1,48 @@
+---
+import BodyHeading from './BodyHeading.astro'
+import BodyArea from './BodyArea.astro'
+import BodySubheading from './BodySubheading.astro'
+import BodyScripture from './BodyScripture.astro'
+import BodyQuote from './BodyQuote.astro'
+import BodyGraphic from './BodyGraphic.astro'
+import BodyList from './BodyList.astro'
+import BodyOrnament from './BodyOrnament.astro'
+import type { CollectionEntry } from 'astro:content'
+
+type Block = NonNullable<CollectionEntry<'talks'>['data']['body']>[number]
+
+interface Props {
+  blocks: Block[]
+}
+
+const { blocks } = Astro.props
+---
+
+{
+  blocks.map((block) => {
+    switch (block.type) {
+      case 'heading':
+        return <BodyHeading text={block.text} />
+      case 'area':
+        return <BodyArea numeral={block.numeral} text={block.text} />
+      case 'subheading':
+        return <BodySubheading text={block.text} />
+      case 'scripture':
+        return (
+          <BodyScripture
+            reference={block.reference}
+            attribution={block.attribution}
+            text={block.text}
+          />
+        )
+      case 'quote':
+        return <BodyQuote speaker={block.speaker} source={block.source} text={block.text} />
+      case 'graphic':
+        return <BodyGraphic image={block.image} alt={block.alt} caption={block.caption} />
+      case 'list':
+        return <BodyList intro={block.intro} items={block.items} />
+      case 'ornament':
+        return <BodyOrnament />
+    }
+  })
+}

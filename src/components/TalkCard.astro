@@ -8,7 +8,7 @@ interface Props {
 
 const { title, speaker, summary, href } = Astro.props
 const Tag = href ? 'a' : 'div'
-const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {}
+const linkAttrs = href ? { href } : {}
 ---
 
 <Tag class="talk-card" {...linkAttrs}>

@@ -1,0 +1,11 @@
+---
+import { inlineEmphasis } from '../../lib/inline'
+
+interface Props {
+  text: string
+}
+
+const { text } = Astro.props
+---
+
+<h2 set:html={inlineEmphasis(text)} />
