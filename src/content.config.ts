@@ -97,6 +97,12 @@ const campaigns = defineCollection({
           ),
         })
         .optional(),
+      // Whether this campaign is eligible for the rotating homepage.
+      // Defaults to false so editing any campaign in the CMS — even setting
+      // its start_date to today by accident — never flips the homepage off
+      // its current campaign. Flipping homepage to a new campaign is an
+      // intentional one-click action.
+      homepage: z.boolean().default(false),
       // Instagram's official "Embed" HTML blob, pasted as-is from the post's
       // three-dot menu. Rendered raw so the post looks how Instagram intends.
       instagram_embed_code: z.preprocess(emptyToUndef, z.string().optional()),

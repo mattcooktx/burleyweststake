@@ -55,6 +55,13 @@ collections:
           - { label: 'Youth Conference', value: youth-conference }
           - { label: 'Other', value: other }
       - {
+          label: 'Show on homepage?',
+          name: homepage,
+          widget: boolean,
+          default: false,
+          hint: 'Only ONE campaign should have this on at a time — the campaign currently featured at the top of burleyweststake.com. Editing dates on a non-homepage campaign will never affect the homepage. To swap the homepage to a different campaign, turn this on for the new one and off for the old one.',
+        }
+      - {
           label: 'Start date (optional)',
           name: start_date,
           widget: datetime,

@@ -56,11 +56,18 @@ const endMs = (c: Campaign) =>
 /**
  * Resolve the campaign that should drive the homepage today.
  *
- * Order of preference: an active campaign whose `start_date <= today <= end_date`,
- * else the most recently ended campaign, else null.
+ * Eligibility: only campaigns with `homepage: true` are ever considered
+ * for the homepage rotation. This is an explicit opt-in — editing any
+ * other campaign (Christmas, Holy Week, etc.) never affects the homepage
+ * regardless of its dates.
+ *
+ * Among eligible campaigns: prefer one whose `start_date <= today <= end_date`,
+ * else the most recently ended one, else null (homepage falls to evergreen).
  */
 export async function getActiveCampaign(now: Date = new Date()): Promise<Campaign | null> {
-  const all = (await getCollection('campaigns')).filter(isPublished)
+  const all = (await getCollection('campaigns'))
+    .filter(isPublished)
+    .filter((c) => c.data.homepage === true)
   const today = now.getTime()
 
   const active = all
