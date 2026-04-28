@@ -157,18 +157,14 @@ collections:
                   required: false,
                   hint: 'Optional. Describes the photo for screen readers and search engines.',
                 }
-              - label: 'Show on homepage?'
-                name: featured_position
-                widget: select
-                required: false
-                default: ''
-                options:
-                  - { label: 'No — gallery only', value: '' }
-                  - { label: 'Yes — tile 1 (big tile, left)', value: '1' }
-                  - { label: 'Yes — tile 2 (top right)', value: '2' }
-                  - { label: 'Yes — tile 3 (middle right)', value: '3' }
-                  - { label: 'Yes — tile 4 (bottom right)', value: '4' }
-                hint: 'Most photos stay gallery-only. Pick a tile position for the four photos you want to feature on the homepage.'
+              - {
+                  label: 'Show on homepage?',
+                  name: homepage_featured,
+                  widget: boolean,
+                  required: false,
+                  default: false,
+                  hint: 'Toggle ON for up to 4 photos. They appear as the homepage tiles in the order they sit in this list — drag rows to reorder. The first toggled-on photo becomes the big left tile; the next three are the small tiles on the right.',
+                }
 
       - {
           label: 'Instagram Embed Code',

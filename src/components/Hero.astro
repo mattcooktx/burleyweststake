@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets'
-import type { Campaign } from '../lib/campaigns'
+import { getTalksForCampaign, type Campaign } from '../lib/campaigns'
 
 interface Props {
   campaign: Campaign
@@ -8,6 +8,11 @@ interface Props {
 
 const { campaign } = Astro.props
 const { hero_eyebrow, hero_headline, hero_subhead, hero_image, hero_image_alt } = campaign.data
+
+// Hide "Talk Recaps" button on campaigns with no talks (e.g., Temple
+// Celebration, Christmas video-only campaigns).
+const talks = await getTalksForCampaign(campaign.id)
+const hasTalks = talks.length > 0
 
 // Headline can be omitted (e.g., video-only campaigns); fall back to the
 // campaign title. Italicize the last two words for emphasis.
@@ -33,9 +38,15 @@ const headlineEm = headlineWords.slice(split).join(' ')
         {headlineLead && <>{headlineLead}<br /></>}<em>{headlineEm}</em>
       </h1>
       {hero_subhead && <p class="hero-sub">{hero_subhead}</p>}
-      <div class="hero-actions">
-        <a href="#talks" class="btn btn-primary">Talk Recaps</a>
-      </div>
+      {
+        hasTalks && (
+          <div class="hero-actions">
+            <a href="#talks" class="btn btn-primary">
+              Talk Recaps
+            </a>
+          </div>
+        )
+      }
     </div>
     {
       hero_image && (

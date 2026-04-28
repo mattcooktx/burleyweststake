@@ -20,12 +20,14 @@ const defaultAlt = `Photo from ${campaign.data.title}`
 type GalleryEntry = {
   file: ImageMetadata
   alt: string
-  featured_position?: number
+  homepage_featured?: boolean
+  legacyPosition?: number
 }
 const detailed: GalleryEntry[] = (gallery.photos ?? []).map((p) => ({
   file: p.file,
   alt: p.alt && p.alt.length > 0 ? p.alt : defaultAlt,
-  featured_position: p.featured_position,
+  homepage_featured: p.homepage_featured,
+  legacyPosition: p.featured_position,
 }))
 const bulk: GalleryEntry[] = (gallery.bulk_photos ?? []).map((file) => ({
   file,
@@ -35,28 +37,41 @@ const all: GalleryEntry[] = [...detailed, ...bulk]
 
 if (all.length === 0) return null
 
-// Pick the 4 tiles by featured_position (1 = big tile left, 2-4 = small right tiles).
-// Fall back to the first 4 photos in declared order if positions aren't set.
-const byPosition = new Map<number, GalleryEntry>()
-for (const photo of all) {
-  if (photo.featured_position && !byPosition.has(photo.featured_position)) {
-    byPosition.set(photo.featured_position, photo)
-  }
-}
+// Tile picker. Three priority lanes, in order:
+//   1. Photos with the new `homepage_featured: true` toggle, in list order
+//   2. Photos with the legacy numeric `featured_position` 1-4, slotted into
+//      that explicit position (kept for backward compat)
+//   3. Fallback to the first available photo for any unfilled slot
 const tiles: GalleryEntry[] = []
-for (let i = 1; i <= 4; i++) {
-  const explicit = byPosition.get(i)
-  if (explicit) {
-    tiles.push(explicit)
-  } else {
-    const fallback = all.find((p) => !tiles.includes(p))
-    if (fallback) tiles.push(fallback)
+const taken = new Set<GalleryEntry>()
+for (const photo of all) {
+  if (photo.homepage_featured && tiles.length < 4) {
+    tiles.push(photo)
+    taken.add(photo)
   }
 }
+for (const photo of all) {
+  if (taken.has(photo)) continue
+  const pos = photo.legacyPosition
+  if (pos && pos >= 1 && pos <= 4 && !tiles[pos - 1]) {
+    tiles[pos - 1] = photo
+    taken.add(photo)
+  }
+}
+for (let i = 0; i < 4; i++) {
+  if (tiles[i]) continue
+  const fallback = all.find((p) => !taken.has(p))
+  if (fallback) {
+    tiles[i] = fallback
+    taken.add(fallback)
+  }
+}
+// Compact (in case all is < 4 entries).
+const finalTiles = tiles.filter(Boolean) as GalleryEntry[]
 
 const galleryTitle = gallery.title
 const galleryMeta = gallery.meta
-const remaining = Math.max(all.length - tiles.length, 0)
+const remaining = Math.max(all.length - finalTiles.length, 0)
 
 // Words for italic emphasis on the last word of the title (e.g. "Linger Longer").
 const words = galleryTitle.trim().split(' ')
@@ -72,7 +87,7 @@ const titleEm = words.slice(-2).join(' ')
 
   <div class="photo-grid">
     {
-      tiles.map((photo, idx) => {
+      finalTiles.map((photo, idx) => {
         const indexInAll = all.indexOf(photo)
         return (
           <button

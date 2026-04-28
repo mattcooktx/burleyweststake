@@ -22,16 +22,16 @@ photo_gallery:
   photos:
     - file: ./images/linger-01.jpg
       alt: Linger Longer — gathering under the tent
-      featured_position: 1
+      homepage_featured: true
     - file: ./images/linger-02.jpg
       alt: Linger Longer — families seated
-      featured_position: 2
+      homepage_featured: true
     - file: ./images/linger-03.jpg
       alt: Linger Longer — picnic on the grass
-      featured_position: 3
+      homepage_featured: true
     - file: ./images/linger-04.jpg
       alt: Linger Longer — the tent and chapel
-      featured_position: 4
+      homepage_featured: true
     - file: ./images/linger-05.jpg
       alt: Linger Longer photograph
     - file: ./images/linger-06.jpg

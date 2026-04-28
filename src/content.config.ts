@@ -118,6 +118,13 @@ const campaigns = defineCollection({
                 z.object({
                   file: z.preprocess(ensureRelativePrefix, image()),
                   alt: z.preprocess(emptyToUndef, z.string().optional().default('')),
+                  // Boolean toggle "Show on homepage?" — checked photos
+                  // become tiles in the order they appear in this list.
+                  homepage_featured: z.boolean().default(false),
+                  // Legacy numeric position field (1-4); kept tolerant for
+                  // existing data. The renderer derives tile order from
+                  // list position now, but we still parse this gracefully
+                  // so old saves don't error.
                   featured_position: z.preprocess(
                     optionalIntFromCms,
                     z.number().int().min(1).max(4).optional(),
