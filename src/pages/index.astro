@@ -28,7 +28,7 @@ const campaign = await getActiveCampaign()
             reference={campaign.data.featured_scripture.reference}
           />
         )}
-        {campaign.data.social_post && <SocialPost campaign={campaign} />}
+        {campaign.data.instagram_embed_code && <SocialPost campaign={campaign} />}
         <Resources />
       </>
     ) : (

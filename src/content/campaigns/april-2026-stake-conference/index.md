@@ -107,33 +107,5 @@ photo_gallery:
       alt: Linger Longer photograph
     - file: ./images/linger-17.jpg
       alt: Linger Longer photograph
-social_post:
-  platform: instagram
-  post_url: https://www.instagram.com/p/DXpPYJaDygn/?img_index=1
-  caption: >-
-    President Cook’s Talk at the General Session of Stake Conference:
-
-
-    When the Lord wants His people to pay attention, He has multiple prophets say the same thing. (see 2 Corinthians 13:1). These warnings are similar to the Watchman on the Tower spoken of by Ezekiel (see Ezekiel 33:2-5)
-
-
-    President Eyring put it this way 30 years ago: “One of the ways we may know that the warning is from the Lord is that the law of … authorized witnesses, has been invoked. When the words of prophets seem repetitive, that should rivet our attention…”
-
-
-    In just the first six months of President Oaks’ tenure as Prophet, he has repeated several themes taught by prior prophets:
-
-
-    1️⃣ The Holy Ghost: He quoted President Nelson’s warning from April 2018 that “in coming days, it will not be possible to survive spiritually without the guiding, directing, comforting, and constant influence of the Holy Ghost.”
-
-
-    2️⃣ Be Peacemakers: His major address in April General Conference was a plea to “[choose] to love others.” He then quoted President Nelson’s challenge “to choose to be a peacemaker, now and always.”
-
-
-    3️⃣ The Family Proclamation: President Oaks’ very first public address after President Nelson’s passing was titled “The Family-Centered Gospel of Jesus Christ.” The doctrines related to marriage, children, and family are still central.
-
-
-    4️⃣ Avoid Distractions/The Parable of The Ten Virgins: President Oaks tied distractions to this Parable: “Take care not to become distracted. Remember His parable of the ten virgins.” The five foolish ones weren’t evil — they were distracted. They knew, but didn’t do. Notably, three other apostles have recently taught this parable in General Conference (Elder Bednar three times, plus Elder Rasband and Elder Renlund last year)
-  posted_at: 2026-04-27T20:39:00.000-06:00
-  preview_image: images/elder-eyring.png
 draft: false
 ---

@@ -100,20 +100,9 @@ const campaigns = defineCollection({
           ),
         })
         .optional(),
-      social_post: z
-        .object({
-          platform: z.enum(['instagram', 'facebook']),
-          post_url: z.string().url(),
-          preview_image: z.preprocess(ensureRelativePrefix, image().optional()),
-          caption: z.string(),
-          // YAML may parse ISO-8601 datetimes as JS Date objects. Accept either
-          // shape and normalize to an ISO string so downstream code is consistent.
-          posted_at: z.preprocess(
-            dateToIsoString,
-            z.string(),
-          ),
-        })
-        .optional(),
+      // Instagram's official "Embed" HTML blob, pasted as-is from the post's
+      // three-dot menu. Rendered raw so the post looks how Instagram intends.
+      instagram_embed_code: z.preprocess(emptyToUndef, z.string().optional()),
       draft: z.boolean().default(false),
     }),
 })

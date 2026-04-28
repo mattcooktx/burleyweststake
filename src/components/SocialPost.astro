@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets'
 import { site } from '../lib/site'
 import type { Campaign } from '../lib/campaigns'
 
@@ -8,17 +7,8 @@ interface Props {
 }
 
 const { campaign } = Astro.props
-const post = campaign.data.social_post
-if (!post) return null
-
-const date = new Date(post.posted_at)
-const timeLabel = isNaN(date.getTime())
-  ? ''
-  : date
-      .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-      .toUpperCase()
-
-const overlayQuote = campaign.data.featured_scripture
+const embedCode = campaign.data.instagram_embed_code
+if (!embedCode) return null
 ---
 
 <section class="social">
@@ -26,50 +16,23 @@ const overlayQuote = campaign.data.featured_scripture
     <h2>Latest from <em>Instagram</em></h2>
   </div>
 
-  <article class="ig-card">
-    <header class="ig-card-header">
-      <div class="ig-avatar">B</div>
-      <div class="ig-meta">
-        <strong>burleyweststake</strong>
-        <div class="handle">{site.brand.name}</div>
-      </div>
-    </header>
-
-    <div class="ig-image">
-      {
-        post.preview_image ? (
-          <Image src={post.preview_image} alt="" widths={[500, 1000]} sizes="(max-width: 600px) 100vw, 500px" />
-        ) : overlayQuote ? (
-          <div class="ig-image-overlay">
-            <div class="quote">"{overlayQuote.text}"</div>
-            <div class="source">{overlayQuote.reference} · {campaign.data.title}</div>
-          </div>
-        ) : (
-          <div class="ig-image-overlay" />
-        )
-      }
-    </div>
-
-    <div class="ig-actions" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-      </svg>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <line x1="22" y1="2" x2="11" y2="13" />
-        <polygon points="22 2 15 22 11 13 2 9 22 2" />
-      </svg>
-    </div>
-
-    <p class="ig-caption">
-      <strong>burleyweststake</strong> {post.caption}
-    </p>
-    {timeLabel && <p class="ig-time">{timeLabel}</p>}
-  </article>
+  <div class="ig-embed" set:html={embedCode}></div>
+  <script async src="https://www.instagram.com/embed.js"></script>
 
   <p class="social-cta">
     <a href={site.social.instagram} target="_blank" rel="noopener">Follow Us on Instagram →</a>
   </p>
 </section>
+
+<style>
+  .ig-embed {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 24px 0;
+  }
+  /* Instagram's embed iframe; keep it from blowing past our column. */
+  .ig-embed :global(.instagram-media) {
+    margin: 0 auto !important;
+    max-width: 540px !important;
+  }
+</style>
