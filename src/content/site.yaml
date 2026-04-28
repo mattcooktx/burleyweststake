@@ -51,7 +51,7 @@ resources:
     icon: video
   - name: Come, Follow Me
     description: Weekly study
-    url: https://www.churchofjesuschrist.org/study/manual/come-follow-me-for-home-and-church?lang=eng
+    url: https://www.churchofjesuschrist.org/study/come-follow-me?lang=eng
     icon: layers
   - name: Self-Reliance
     description: Programs & courses
