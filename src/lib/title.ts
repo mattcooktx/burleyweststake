@@ -1,6 +1,15 @@
 import { inlineEmphasis } from './inline'
 
 /**
+ * Strip emphasis markers from a title for plain-text contexts (browser tab,
+ * og:title, twitter:title). "The Lord's *Law of Witnesses*" -> the same
+ * text without the asterisks.
+ */
+export function stripTitleMarkers(title: string): string {
+  return title.replace(/\*\*?([^*\n]+)\*\*?/g, '$1')
+}
+
+/**
  * Render a talk/page title to HTML.
  *
  * Editors author titles with `*emphasis*` to mark which span should be

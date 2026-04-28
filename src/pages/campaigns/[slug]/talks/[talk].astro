@@ -9,6 +9,7 @@ import {
   type Campaign,
   type Talk,
 } from '../../../../lib/campaigns'
+import { stripTitleMarkers } from '../../../../lib/title'
 import type { GetStaticPaths } from 'astro'
 
 export const getStaticPaths = (async () => {
@@ -54,12 +55,16 @@ if (ogSource) {
 }
 
 const sessionLabel = SESSION_LABELS[talk.data.session] ?? talk.data.session
-const ogTitle = `${talk.data.title} — ${sessionLabel}`
+// Strip *…* / **…** emphasis markers for plain-text contexts (browser tab
+// and share-preview cards). The HTML rendering on the page still uses the
+// asterisk-syntax via TalkLayoutRich/Pdf.
+const plainTitle = stripTitleMarkers(talk.data.title)
+const ogTitle = `${plainTitle} — ${sessionLabel}`
 ---
 
 <Base
   current={current}
-  title={talk.data.title}
+  title={plainTitle}
   description={talk.data.teaser}
   meta={{
     ogTitle,
