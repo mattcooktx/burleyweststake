@@ -23,12 +23,15 @@ type GalleryEntry = {
   homepage_featured?: boolean
   legacyPosition?: number
 }
-const detailed: GalleryEntry[] = (gallery.photos ?? []).map((p) => ({
-  file: p.file,
-  alt: p.alt && p.alt.length > 0 ? p.alt : defaultAlt,
-  homepage_featured: p.homepage_featured,
-  legacyPosition: p.featured_position,
-}))
+// Filter out file-less entries (CMS half-saves, half-finished new rows).
+const detailed: GalleryEntry[] = (gallery.photos ?? [])
+  .filter((p): p is typeof p & { file: ImageMetadata } => !!p.file)
+  .map((p) => ({
+    file: p.file,
+    alt: p.alt && p.alt.length > 0 ? p.alt : defaultAlt,
+    homepage_featured: p.homepage_featured,
+    legacyPosition: p.featured_position,
+  }))
 const bulk: GalleryEntry[] = (gallery.bulk_photos ?? []).map((file) => ({
   file,
   alt: defaultAlt,

@@ -116,7 +116,10 @@ const campaigns = defineCollection({
               (v) => (v == null ? [] : v),
               z.array(
                 z.object({
-                  file: z.preprocess(ensureRelativePrefix, image()),
+                  // Optional so a half-finished CMS entry (no file picked
+                  // yet) doesn't break the build. The renderer filters
+                  // out file-less entries.
+                  file: z.preprocess(ensureRelativePrefix, image().optional()),
                   alt: z.preprocess(emptyToUndef, z.string().optional().default('')),
                   // Boolean toggle "Show on homepage?" — checked photos
                   // become tiles in the order they appear in this list.
