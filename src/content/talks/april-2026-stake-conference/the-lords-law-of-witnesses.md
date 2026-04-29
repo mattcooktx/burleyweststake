@@ -106,10 +106,10 @@ body:
   - type: list
     intro: 'President Oaks''s first public address after President Nelson''s passing:'
     items:
-      - 'Reiterated the Family Proclamation: "the family is ordained of God and is central to the Creator''s plan for the eternal destiny of His children"'
-      - The command to multiply and replenish the earth is still in effect
-      - It is vital that Latter-day Saints do not lose their understanding of the purpose of marriage and the value of children
-      - Bemoans the national decline in marriage rates and childbearing rates
+      - text: 'Reiterated the Family Proclamation: "the family is ordained of God and is central to the Creator''s plan for the eternal destiny of His children"'
+      - text: The command to multiply and replenish the earth is still in effect
+      - text: It is vital that Latter-day Saints do not lose their understanding of the purpose of marriage and the value of children
+      - text: Bemoans the national decline in marriage rates and childbearing rates
 
   - type: quote
     speaker: President Dallin H. Oaks
@@ -128,9 +128,9 @@ body:
 
   - type: list
     items:
-      - Elder Bednar has spoken about the ten virgins three times in general conference
-      - Elder Rasband spoke of the parable three years ago
-      - Elder Renlund spoke about it in April 2025
+      - text: Elder Bednar has spoken about the ten virgins three times in general conference
+      - text: Elder Rasband spoke of the parable three years ago
+      - text: Elder Renlund spoke about it in April 2025
 
   - type: quote
     speaker: Elder Neil L. Andersen
@@ -161,13 +161,13 @@ body:
 
   - type: list
     items:
-      - This parable represents the membership of the Church — not the world
-      - All ten were invited to the supper
-      - All ten knew the bridegroom would return for his bride
-      - All ten had been warned during the entire betrothal period
-      - They simply procrastinated — failed to prepare and sadly were left out
-      - 'They **knew**, but did not **do**. They procrastinated.'
-      - They allowed themselves to be distracted.
+      - text: This parable represents the membership of the Church — not the world
+      - text: All ten were invited to the supper
+      - text: All ten knew the bridegroom would return for his bride
+      - text: All ten had been warned during the entire betrothal period
+      - text: They simply procrastinated — failed to prepare and sadly were left out
+      - text: 'They **knew**, but did not **do**. They procrastinated.'
+      - text: They allowed themselves to be distracted.
 
   - type: quote
     speaker: President Russell M. Nelson
