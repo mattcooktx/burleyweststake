@@ -254,10 +254,14 @@ collections:
           - { label: 'Youth Session', value: youth }
           - { label: 'Other', value: other }
       - {
-          label: 'Session date label',
+          label: 'Session Date',
           name: session_date,
-          widget: string,
-          hint: 'Free-form. Example: "Sunday, April 19".',
+          widget: datetime,
+          format: 'YYYY-MM-DD',
+          date_format: 'YYYY-MM-DD',
+          time_format: false,
+          picker_utc: false,
+          hint: 'The actual date of the session (e.g., 2026-04-19).',
         }
       - {
           label: 'Display order within session',
