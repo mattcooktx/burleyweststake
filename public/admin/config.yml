@@ -178,10 +178,8 @@ collections:
         name: youtube_url
         widget: string
         required: false
-        hint: 'Paste a YouTube URL (e.g., https://youtu.be/abc123). Leave empty if the campaign has no video.'
-        pattern:
-          - '^(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/|youtube\.com/shorts/)[a-zA-Z0-9_-]+'
-          - 'Must be a valid YouTube URL'
+        hint: 'Paste a YouTube URL (e.g., https://youtu.be/abc123 or https://www.youtube.com/watch?v=abc123). Leave empty for no video. Build will fail with a clear error if the URL is not a valid YouTube link.'
+        pattern: ['(youtube\.com|youtu\.be)', 'Must be a YouTube URL (youtube.com or youtu.be).']
 
       - {
           label: 'Draft (hide from site)',
