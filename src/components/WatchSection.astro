@@ -1,0 +1,52 @@
+---
+import YouTubeEmbed from './YouTubeEmbed.astro'
+
+interface Props {
+  url: string
+  iframeTitle?: string
+}
+
+const { url, iframeTitle = 'Video' } = Astro.props
+---
+
+<section class="watch-section">
+  <div class="watch-section-inner">
+    <h2 class="watch-section-heading">
+      <em>Watch</em>
+    </h2>
+    <YouTubeEmbed url={url} title={iframeTitle} />
+  </div>
+</section>
+
+<style>
+  .watch-section {
+    padding: 80px var(--section-pad-x);
+    border-top: 1px solid var(--rule);
+  }
+  .watch-section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .watch-section-heading {
+    font-family: var(--serif-display);
+    font-size: 38px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-align: center;
+    margin: 0 0 36px;
+  }
+  .watch-section-heading em {
+    font-style: italic;
+    color: var(--accent-deep);
+  }
+  @media (max-width: 900px) {
+    .watch-section {
+      padding: 56px var(--section-pad-x-mobile);
+    }
+    .watch-section-heading {
+      font-size: 30px;
+      margin-bottom: 28px;
+    }
+  }
+</style>

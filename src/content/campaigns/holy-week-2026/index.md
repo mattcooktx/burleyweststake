@@ -17,8 +17,7 @@ photo_gallery:
   photos:
     - file: images/palm-sunday-1.jpg
       alt: Christ Enters Jerusalem
-video_embed: https://youtu.be/MCUjucjd-Lc?si=cXQqKPFJsKq8pdLA
-video_caption: Palm Sunday Video
+youtube_url: https://youtu.be/MCUjucjd-Lc?si=cXQqKPFJsKq8pdLA
 ---
 
 Stub campaign — placeholder so the Holy Week collection page has at least one entry to render against. Replace with real Holy Week content when the time comes.

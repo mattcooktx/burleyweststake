@@ -14,8 +14,7 @@ photo_gallery:
   photos:
     - alt: Be it unto me...
       file: images/carl_heinrich_bloch_-_the_annunciation.jpg
-video_embed: https://youtu.be/9AlR4FYLaTg?si=dKgZcGk9uUcS87yc
-video_caption: President Cook's Christmas Video Message
+youtube_url: https://youtu.be/9AlR4FYLaTg?si=dKgZcGk9uUcS87yc
 ---
 
 Stub campaign — placeholder so the Christmas collection page has at least one entry to render against.

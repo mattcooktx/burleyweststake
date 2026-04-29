@@ -1,53 +1,28 @@
 /**
- * Pull a YouTube video ID out of whatever an editor pasted: a URL or a
- * full <iframe> embed blob.
+ * Extract the 11-character video ID from a YouTube URL.
  *
- * Returns { id, isShorts } if found, else null. Supported inputs:
- *   - https://www.youtube.com/watch?v=dQw4w9WgXcQ
- *   - https://youtu.be/dQw4w9WgXcQ
- *   - https://www.youtube.com/embed/dQw4w9WgXcQ
- *   - https://youtube.com/shorts/dQw4w9WgXcQ           (isShorts: true)
- *   - <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?...">...</iframe>
- *   - bare ID: dQw4w9WgXcQ
+ * Accepts:
+ *   - https://www.youtube.com/watch?v=VIDEO_ID
+ *   - https://youtu.be/VIDEO_ID
+ *   - https://youtube.com/shorts/VIDEO_ID
+ *   - With or without protocol, www., and trailing query params.
+ *
+ * Returns null if no valid ID is found.
  */
-const ID_RE = /([a-zA-Z0-9_-]{11})/
-
-export interface ParsedYouTube {
-  id: string
-  isShorts: boolean
+export function extractYouTubeId(url: string): string | null {
+  if (!url) return null
+  const m = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+  )
+  return m ? m[1] : null
 }
 
-export function extractYouTubeId(input: string): ParsedYouTube | null {
-  if (!input) return null
-  const trimmed = input.trim()
-  const isShorts = /\/shorts\//.test(trimmed)
-
-  // Try src="..." in an iframe blob first (most specific).
-  const srcMatch = trimmed.match(
-    /(?:src|href)=["'](?:https?:)?\/\/(?:www\.)?(?:youtube\.com|youtu\.be|youtube-nocookie\.com)\/(?:embed\/|watch\?v=|shorts\/|v\/)?([a-zA-Z0-9_-]{11})/,
-  )
-  if (srcMatch) return { id: srcMatch[1], isShorts }
-
-  // Then try the input as a URL.
-  const urlMatch = trimmed.match(
-    /(?:https?:)?\/\/(?:www\.)?(?:youtube\.com|youtu\.be|youtube-nocookie\.com)\/(?:embed\/|watch\?v=|shorts\/|v\/)?([a-zA-Z0-9_-]{11})/,
-  )
-  if (urlMatch) return { id: urlMatch[1], isShorts }
-
-  // Bare ID fallback.
-  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return { id: trimmed, isShorts: false }
-
-  // Last resort: any 11-char run that looks like an ID, but only if the
-  // input is short (avoids false matches inside large blobs).
-  if (trimmed.length < 30) {
-    const m = trimmed.match(ID_RE)
-    if (m) return { id: m[1], isShorts: false }
-  }
-
-  return null
+/** Privacy-enhanced YouTube embed URL — no tracking cookies until play. */
+export function getYouTubeEmbedUrl(videoId: string): string {
+  return `https://www.youtube-nocookie.com/embed/${videoId}`
 }
 
-/** YouTube's CDN poster image URL for a given video ID. */
-export function youtubePosterUrl(id: string): string {
-  return `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
+/** True if the URL points to a YouTube Short (vertical 9:16). */
+export function isYouTubeShorts(url: string): boolean {
+  return /\/shorts\//.test(url)
 }

@@ -174,20 +174,14 @@ collections:
           hint: 'On Instagram, open the post → tap the three dots → Embed → copy. Paste the entire HTML blob here.',
         }
 
-      - {
-          label: 'Featured YouTube Video',
-          name: video_embed,
-          widget: text,
-          required: false,
-          hint: 'Paste a YouTube URL (https://youtu.be/abc123 or https://www.youtube.com/watch?v=abc123) OR the full embed code. Either works. Renders as a click-to-load tile below the hero.',
-        }
-      - {
-          label: 'Video caption',
-          name: video_caption,
-          widget: string,
-          required: false,
-          hint: 'Optional small caption below the video.',
-        }
+      - label: 'YouTube Video URL'
+        name: youtube_url
+        widget: string
+        required: false
+        hint: 'Paste a YouTube URL (e.g., https://youtu.be/abc123). Leave empty if the campaign has no video.'
+        pattern:
+          - '^(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/|youtube\.com/shorts/)[a-zA-Z0-9_-]+'
+          - 'Must be a valid YouTube URL'
 
       - {
           label: 'Draft (hide from site)',

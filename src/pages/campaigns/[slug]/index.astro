@@ -3,8 +3,8 @@ import { getCollection } from 'astro:content'
 import { getImage } from 'astro:assets'
 import Base from '../../../layouts/Base.astro'
 import Hero from '../../../components/Hero.astro'
-import FeaturedVideo from '../../../components/FeaturedVideo.astro'
 import TalksSection from '../../../components/TalksSection.astro'
+import WatchSection from '../../../components/WatchSection.astro'
 import PhotoTeaser from '../../../components/PhotoTeaser.astro'
 import ScriptureBand from '../../../components/ScriptureBand.astro'
 import SocialPost from '../../../components/SocialPost.astro'
@@ -36,6 +36,16 @@ const current = navMap[campaign.data.category] ?? 'collections'
 const talks = await getTalksForCampaign(campaign.id)
 const hasTalks = talks.length > 0
 
+// "Real content" — when ANY of these is populated, the campaign has
+// substance even if its start_date is far-future. Show content sections
+// rather than the coming-soon block.
+const hasRealContent =
+  hasTalks ||
+  !!campaign.data.youtube_url ||
+  !!campaign.data.featured_scripture ||
+  !!campaign.data.photo_gallery ||
+  !!campaign.data.instagram_embed_code
+
 let ogImage: string | undefined
 if (campaign.data.hero_image) {
   const img = await getImage({ src: campaign.data.hero_image, width: 1200, format: 'jpeg' })
@@ -62,7 +72,7 @@ if (campaign.data.hero_image) {
     </header>
   )}
 
-  {placeholder ? (
+  {placeholder && !hasRealContent ? (
     <section class="coming-soon-block">
       <div class="eyebrow">Coming soon</div>
       <p>
@@ -71,13 +81,13 @@ if (campaign.data.hero_image) {
     </section>
   ) : (
     <>
-      {campaign.data.video_embed && (
-        <FeaturedVideo
-          embed={campaign.data.video_embed}
-          caption={campaign.data.video_caption}
+      {hasTalks && <TalksSection campaign={campaign} withSidebar />}
+      {campaign.data.youtube_url && (
+        <WatchSection
+          url={campaign.data.youtube_url}
+          iframeTitle={`Video — ${campaign.data.hero_headline ?? campaign.data.title}`}
         />
       )}
-      {hasTalks && <TalksSection campaign={campaign} withSidebar />}
       {campaign.data.photo_gallery && <PhotoTeaser campaign={campaign} />}
       {campaign.data.featured_scripture && (
         <ScriptureBand

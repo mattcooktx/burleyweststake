@@ -1,8 +1,8 @@
 ---
 import Base from '../layouts/Base.astro'
 import Hero from '../components/Hero.astro'
-import FeaturedVideo from '../components/FeaturedVideo.astro'
 import TalksSection from '../components/TalksSection.astro'
+import WatchSection from '../components/WatchSection.astro'
 import PhotoTeaser from '../components/PhotoTeaser.astro'
 import ScriptureBand from '../components/ScriptureBand.astro'
 import SocialPost from '../components/SocialPost.astro'
@@ -29,13 +29,13 @@ const campaign = await getActiveCampaign()
     campaign ? (
       <>
         <Hero campaign={campaign} />
-        {campaign.data.video_embed && (
-          <FeaturedVideo
-            embed={campaign.data.video_embed}
-            caption={campaign.data.video_caption}
+        <TalksSection campaign={campaign} withSidebar />
+        {campaign.data.youtube_url && (
+          <WatchSection
+            url={campaign.data.youtube_url}
+            iframeTitle={`Video — ${campaign.data.hero_headline ?? campaign.data.title}`}
           />
         )}
-        <TalksSection campaign={campaign} withSidebar />
         {campaign.data.photo_gallery && <PhotoTeaser campaign={campaign} />}
         {campaign.data.featured_scripture && (
           <ScriptureBand
