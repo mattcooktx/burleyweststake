@@ -4,7 +4,7 @@ speaker: President Matt Cook
 speaker_role: Stake Presidency
 campaign: april-2026-stake-conference
 session: adult
-session_date: Saturday, April 18
+session_date: 2026-04-18
 session_order: 1
 featured: true
 teaser: How daily scripture study transforms the way we hear the Savior's voice in our lives.

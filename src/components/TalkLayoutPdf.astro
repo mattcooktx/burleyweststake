@@ -1,5 +1,6 @@
 ---
 import { renderTitleHtml, stripTitleMarkers } from '../lib/title'
+import { formatSessionDate } from '../lib/dates'
 import {
   resolveTalkPdfUrl,
   SESSION_LABELS,
@@ -29,7 +30,7 @@ const plainTitle = stripTitleMarkers(talk.data.title)
 </nav>
 
 <header class="pdf-talk-header">
-  <div class="talk-eyebrow">{sessionLabel} · {talk.data.session_date}</div>
+  <div class="talk-eyebrow">{sessionLabel} · {formatSessionDate(new Date(talk.data.session_date))}</div>
   <h1 class="talk-title" set:html={titleHtml} />
   <div class="talk-byline">{talk.data.speaker}</div>
   {talk.data.speaker_role && <div class="talk-meta-line">{talk.data.speaker_role}</div>}
