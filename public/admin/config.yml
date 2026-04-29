@@ -322,11 +322,7 @@ collections:
         name: body
         widget: list
         required: false
-        collapsed: true
-        minimize_collapsed: true
         typeKey: type
-        types_default: quote
-        hint: 'Blocks render collapsed by default — click any block to expand and edit. Drag the row to reorder. The "+ Add" button defaults to a Quote block; click the dropdown arrow on it to pick a different block type.'
         types:
           - label: 'Heading'
             name: heading
@@ -342,7 +338,7 @@ collections:
           - label: 'Numbered Area Marker (i., ii., iii., …)'
             name: area
             widget: object
-            summary: 'Area {{fields.numeral}}: {{fields.text}}'
+            summary: '{{fields.numeral}} {{fields.text}}'
             fields:
               - { label: 'Numeral', name: numeral, widget: string, hint: 'e.g., "i.", "ii.", "iii.", "iv."' }
               - {
@@ -379,7 +375,7 @@ collections:
           - label: 'Speaker quote (cream-accent border)'
             name: quote
             widget: object
-            summary: 'Quote — {{fields.speaker}}: {{fields.text}}'
+            summary: 'Quote: {{fields.speaker}}'
             fields:
               - { label: 'Speaker', name: speaker, widget: string, hint: 'e.g., "President Russell M. Nelson"' }
               - {
@@ -419,7 +415,7 @@ collections:
           - label: 'Bullet list'
             name: list
             widget: object
-            summary: 'List: {{fields.intro}}'
+            summary: 'List ({{fields.items.length}} items)'
             fields:
               - {
                   label: 'Intro (optional)',
@@ -446,7 +442,7 @@ collections:
           - label: 'Three-dot ornament divider'
             name: ornament
             widget: object
-            summary: '· · · ornament divider'
+            summary: 'Ornament divider'
             fields:
               - {
                   label: 'Note',
