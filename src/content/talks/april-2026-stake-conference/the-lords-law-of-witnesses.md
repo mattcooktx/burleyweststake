@@ -4,7 +4,7 @@ speaker: President Matt Cook
 speaker_role: Stake Presidency
 campaign: april-2026-stake-conference
 session: general
-session_date: Sunday, April 19
+session_date: 2026-04-19
 session_order: 1
 featured: true
 teaser: Recognizing the Lord's voice through the law of witnesses — and the four areas where President Oaks has invoked it.

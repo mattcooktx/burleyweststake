@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
+import { formatSessionDate } from './dates'
 
 export type Campaign = CollectionEntry<'campaigns'>
 export type Category = CollectionEntry<'categories'>
@@ -154,7 +155,7 @@ export function groupTalksBySession(talks: Talk[]): SessionGroup[] {
       groups.set(key, {
         key,
         label: SESSION_LABELS[key] ?? key,
-        date: talk.data.session_date,
+        date: formatSessionDate(new Date(talk.data.session_date)),
         order: SESSION_DISPLAY_ORDER[key] ?? 99,
         talks: [],
       })
