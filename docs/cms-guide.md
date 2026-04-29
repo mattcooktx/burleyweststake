@@ -65,6 +65,16 @@ You can refresh the live site after about a minute to see the change. **Note:** 
 - On any campaign, check **Draft (hide from site)** if you want to work on it without it going live yet.
 - Drafts don't render on the homepage or in Collections.
 
+## Discarding changes (abandoning edits)
+
+If you started editing a campaign or talk and decide you don't want to save the changes:
+
+1. Click the **back arrow** at the top of the editor (or your browser's back button).
+2. When the CMS prompts "You have unsaved changes — leave anyway?", click **Leave**.
+3. **Refresh the page** (Cmd-R / Ctrl-R) to clear any lingering state from your browser's local storage.
+
+If you skip step 3, the next time you open the same entry the CMS may resurface your unsaved edits (this is by design — Decap holds them locally so you can recover from accidental closes). Refreshing wipes them.
+
 ## Common gotchas
 
 - **URL slugs are forever.** Once a campaign has been published, changing its slug breaks any links pointing at it. If you must change it, ask Matt to set up a redirect.

@@ -28,7 +28,7 @@ collections:
   - name: campaigns
     label: Campaigns
     label_singular: Campaign
-    description: 'Stake conferences, Holy Week, Christmas, and other seasonal campaigns.'
+    description: 'Stake conferences, Holy Week, Christmas, and other seasonal campaigns. — TO DISCARD UNSAVED CHANGES: click the back arrow at the top, click "Leave" when prompted, then refresh the page to clear local storage.'
     folder: src/content/campaigns
     path: '{{slug}}/index'
     create: true
@@ -204,7 +204,7 @@ collections:
   - name: talks
     label: Talks
     label_singular: Talk
-    description: 'Individual talks. Each talk gets its own page at /campaigns/<campaign>/talks/<talk>/.'
+    description: 'Individual talks. Each talk gets its own page at /campaigns/<campaign>/talks/<talk>/. — TO DISCARD UNSAVED CHANGES: click the back arrow at the top, click "Leave" when prompted, then refresh the page to clear local storage.'
     folder: src/content/talks
     # Keep talks grouped by campaign on disk: <campaign-slug>/<talk-slug>.md
     # The CMS collection lists talks across all campaigns flat, but the
