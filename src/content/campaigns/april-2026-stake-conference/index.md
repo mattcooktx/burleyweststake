@@ -7,8 +7,8 @@ start_date: 2026-04-15
 end_date: ""
 hero_eyebrow: Stake Conference Recap
 hero_headline: April 2026 Stake Conference
-hero_subhead: Recordings and presentations from the weekend of April 18–19.
-  Watch, read, and revisit the messages shared with our stake.
+hero_subhead: "Summaries of talks given during Stake Conference from the weekend
+  of April 18–19. "
 display_dates: April 18–19, 2026
 hero_image: ./images/hero-temple-dusk.jpg
 hero_image_alt: Burley Idaho Temple at dusk
