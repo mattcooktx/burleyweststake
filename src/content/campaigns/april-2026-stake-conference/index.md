@@ -158,5 +158,7 @@ instagram_embed_code: >-
   (@burleyweststake)</a></p></div></blockquote>
 
   <script async src="//www.instagram.com/embed.js"></script>
+video_embed: |
+  https://example.com
 draft: false
 ---
