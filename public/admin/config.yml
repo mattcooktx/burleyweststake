@@ -256,11 +256,11 @@ collections:
       - {
           label: 'Session date',
           name: session_date,
-          widget: date,
+          widget: datetime,
           format: 'YYYY-MM-DD',
           date_format: 'YYYY-MM-DD',
           time_format: false,
-          picker_utc: true,
+          picker_utc: false,
           hint: 'The actual date of the session. Click to pick from the calendar.',
         }
       - {
