@@ -241,9 +241,7 @@ const talks = defineCollection({
         speaker_role: z.preprocess(emptyToUndef, z.string().optional()),
         campaign: z.string(), // slug of the parent campaign (matches folder name)
         session: z.enum(SESSION_KEYS),
-        // Real ISO date stored as YYYY-MM-DD; rendered as
-        // "Sunday, April 19" via formatSessionDate() at display time.
-        session_date: z.coerce.date(),
+        session_date: z.string(), // human-readable, e.g., "Sunday, April 19"
         session_order: z.preprocess(emptyToUndef, z.number().int().default(99)),
         featured: z.boolean().default(false),
         teaser: z.string(), // 1-sentence summary for homepage card

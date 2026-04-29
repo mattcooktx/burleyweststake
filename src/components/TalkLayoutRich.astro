@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets'
 import TalkBody from './body/TalkBody.astro'
 import { renderTitleHtml, stripTitleMarkers } from '../lib/title'
-import { formatSessionDate } from '../lib/dates'
 import {
   resolveTalkPdfUrl,
   SESSION_LABELS,
@@ -38,7 +37,7 @@ const showPdfCta = hasBody || !!pdfUrl
 </nav>
 
 <section class="talk-hero">
-  <div class="talk-eyebrow">{sessionLabel} · {formatSessionDate(new Date(talk.data.session_date))}</div>
+  <div class="talk-eyebrow">{sessionLabel} · {talk.data.session_date}</div>
   <h1 class="talk-title" set:html={titleHtml} />
   <div class="talk-byline">{talk.data.speaker}</div>
   {talk.data.speaker_role && <div class="talk-meta-line">{talk.data.speaker_role}</div>}

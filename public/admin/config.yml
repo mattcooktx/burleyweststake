@@ -254,14 +254,10 @@ collections:
           - { label: 'Youth Session', value: youth }
           - { label: 'Other', value: other }
       - {
-          label: 'Session date',
+          label: 'Session date label',
           name: session_date,
-          widget: date,
-          format: 'YYYY-MM-DD',
-          date_format: 'YYYY-MM-DD',
-          time_format: false,
-          picker_utc: true,
-          hint: 'The actual date of the session. Click to pick from the calendar.',
+          widget: string,
+          hint: 'Free-form. Example: "Sunday, April 19".',
         }
       - {
           label: 'Display order within session',
