@@ -4,7 +4,7 @@ slug: april-2026-stake-conference
 category: stake-conference
 homepage: true
 start_date: 2026-04-15
-end_date: ""
+end_date: 2026-11-06
 hero_eyebrow: Stake Conference Recap
 hero_headline: April 2026 Stake Conference
 hero_subhead: "Summaries of talks given during Stake Conference from the weekend
