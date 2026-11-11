@@ -61,7 +61,7 @@ const showPdfCta = hasBody || !!pdfUrl
 }
 
 <article class="talk-body">
-  {hasBody && <TalkBody blocks={talk.data.body!} />}
+  {hasBody && <TalkBody blocks={talk.data.body!} talkId={talk.id} />}
 
   {
     !hasBody && (

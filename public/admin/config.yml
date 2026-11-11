@@ -282,7 +282,7 @@ collections:
         widget: select
         options:
           - { label: 'Rich (full talk page with body content)', value: rich }
-          - { label: 'PDF only (embedded PDF, no body)', value: pdf }
+          - { label: 'PDF (embedded PDF; any body blocks appear below it)', value: pdf }
         default: pdf
         hint: 'Rich = the speaker provided a full outline you transcribe with structured blocks. PDF = upload the file and embed it.'
       - {
@@ -310,7 +310,7 @@ collections:
           required: false,
         }
 
-      - label: 'Body (Rich mode only — typed blocks)'
+      - label: 'Body (typed blocks; in PDF mode they appear below the PDF)'
         name: body
         widget: list
         required: false
@@ -403,6 +403,41 @@ collections:
                   widget: string,
                   required: false,
                   hint: 'Optional small caption below the image.',
+                }
+          - label: 'Video (MP4 file that plays on the page)'
+            name: video
+            widget: object
+            summary: 'Video: {{fields.title}}'
+            fields:
+              - {
+                  label: 'Video file (MP4)',
+                  name: file,
+                  widget: file,
+                  media_folder: '',
+                  public_folder: '',
+                  hint: 'MP4 only. Keep each file under about 45 MB; compress larger videos before uploading.',
+                }
+              - {
+                  label: 'Title',
+                  name: title,
+                  widget: string,
+                  hint: 'Shown above the player, e.g., "Elder Dale G. Renlund".',
+                }
+              - {
+                  label: 'Caption',
+                  name: caption,
+                  widget: string,
+                  required: false,
+                  hint: 'Optional small caption below the player, e.g., where the video is from.',
+                }
+              - {
+                  label: 'Poster image',
+                  name: poster,
+                  widget: image,
+                  required: false,
+                  media_folder: '',
+                  public_folder: '',
+                  hint: 'Optional still frame shown before the video plays. Recommended, since phones show an empty player without one.',
                 }
           - label: 'Bullet list'
             name: list

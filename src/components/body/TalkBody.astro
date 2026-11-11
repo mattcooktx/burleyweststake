@@ -5,6 +5,7 @@ import BodySubheading from './BodySubheading.astro'
 import BodyScripture from './BodyScripture.astro'
 import BodyQuote from './BodyQuote.astro'
 import BodyGraphic from './BodyGraphic.astro'
+import BodyVideo from './BodyVideo.astro'
 import BodyList from './BodyList.astro'
 import BodyOrnament from './BodyOrnament.astro'
 import type { CollectionEntry } from 'astro:content'
@@ -13,9 +14,11 @@ type Block = NonNullable<CollectionEntry<'talks'>['data']['body']>[number]
 
 interface Props {
   blocks: Block[]
+  // "<campaign-slug>/<talk-slug>"; needed to resolve talk-relative video files.
+  talkId?: string
 }
 
-const { blocks } = Astro.props
+const { blocks, talkId } = Astro.props
 ---
 
 {
@@ -39,6 +42,16 @@ const { blocks } = Astro.props
         return <BodyQuote speaker={block.speaker} source={block.source} text={block.text} />
       case 'graphic':
         return <BodyGraphic image={block.image} alt={block.alt} caption={block.caption} />
+      case 'video':
+        return (
+          <BodyVideo
+            talkId={talkId}
+            file={block.file}
+            title={block.title}
+            caption={block.caption}
+            poster={block.poster}
+          />
+        )
       case 'list':
         return <BodyList intro={block.intro} items={block.items} />
       case 'ornament':

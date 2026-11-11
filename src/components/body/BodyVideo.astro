@@ -1,0 +1,29 @@
+---
+import { getImage } from 'astro:assets'
+import { resolveTalkVideoUrl } from '../../lib/campaigns'
+
+interface Props {
+  talkId?: string
+  file?: string
+  title: string
+  caption?: string
+  poster?: ImageMetadata
+}
+
+const { talkId, file, title, caption, poster } = Astro.props
+const src = talkId && file ? resolveTalkVideoUrl(talkId, file) : undefined
+const posterUrl = poster ? (await getImage({ src: poster, width: 1280 })).src : undefined
+---
+
+{
+  src && (
+    <figure class="video-block">
+      <div class="video-title">{title}</div>
+      <video controls playsinline preload="metadata" poster={posterUrl} aria-label={title}>
+        <source src={src} type="video/mp4" />
+        <a href={src}>Download the video</a>
+      </video>
+      {caption && <figcaption>{caption}</figcaption>}
+    </figure>
+  )
+}

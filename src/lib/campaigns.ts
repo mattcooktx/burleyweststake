@@ -33,6 +33,21 @@ export function resolveTalkPdfUrl(talkId: string, relativePath: string): string 
   return resolvePdfFromDir(`/src/content/talks/${campaignSlug}`, relativePath)
 }
 
+// Self-hosted talk videos (MP4) stored beside the talk markdown. Same
+// treatment as PDFs: built filenames are content-hashed under /_astro/.
+const videoUrls = import.meta.glob<string>('/src/content/**/*.mp4', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+})
+
+/** Resolve a talk-relative video path (e.g. "./videos/clip.mp4") to a built URL. */
+export function resolveTalkVideoUrl(talkId: string, relativePath: string): string | undefined {
+  const campaignSlug = talkId.split('/')[0]
+  const cleaned = relativePath.replace(/^\.\//, '')
+  return videoUrls[`/src/content/talks/${campaignSlug}/${cleaned}`]
+}
+
 const isPublished = (c: Campaign) => !c.data.draft
 
 export function isPlaceholder(c: Campaign, now: Date = new Date()): boolean {

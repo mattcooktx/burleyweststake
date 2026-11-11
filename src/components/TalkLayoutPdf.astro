@@ -1,4 +1,5 @@
 ---
+import TalkBody from './body/TalkBody.astro'
 import { renderTitleHtml, stripTitleMarkers } from '../lib/title'
 import { formatSessionDate } from '../lib/dates'
 import {
@@ -16,6 +17,8 @@ interface Props {
 const { talk, campaign } = Astro.props
 const sessionLabel = SESSION_LABELS[talk.data.session] ?? talk.data.session
 const pdfUrl = talk.data.pdf ? resolveTalkPdfUrl(talk.id, talk.data.pdf) : undefined
+// Optional extras (videos shown in the session, handouts) beneath the PDF.
+const hasBody = (talk.data.body?.length ?? 0) > 0
 
 const titleHtml = renderTitleHtml(talk.data.title)
 const plainTitle = stripTitleMarkers(talk.data.title)
@@ -67,6 +70,14 @@ const plainTitle = stripTitleMarkers(talk.data.title)
     </>
   ) : (
     <p class="empty-state">PDF for this talk is not yet available.</p>
+  )
+}
+
+{
+  hasBody && (
+    <article class="talk-body pdf-talk-extras">
+      <TalkBody blocks={talk.data.body!} talkId={talk.id} />
+    </article>
   )
 }
 

@@ -225,6 +225,26 @@ const talks = defineCollection({
         caption: z.preprocess(emptyToUndef, z.string().optional()),
       }),
       z.object({
+        type: z.literal('video'),
+        // Self-hosted MP4 stored beside the talk markdown (e.g.
+        // "./videos/clip.mp4"). Resolved to a hashed /_astro/ URL at build
+        // time by resolveTalkVideoUrl(). Optional so a half-finished CMS
+        // entry (no file picked yet) does not break the build; the renderer
+        // skips file-less blocks.
+        file: z.preprocess(
+          (v) => ensureRelativePrefix(emptyToUndef(v)),
+          z.string().optional(),
+        ),
+        title: z.string(), // shown above the player
+        caption: z.preprocess(emptyToUndef, z.string().optional()),
+        // Still frame shown before playback. Phones show an empty player
+        // until play is tapped unless a poster is set.
+        poster: z.preprocess(
+          (v) => ensureRelativePrefix(emptyToUndef(v)),
+          image().optional(),
+        ),
+      }),
+      z.object({
         type: z.literal('list'),
         intro: z.preprocess(emptyToUndef, z.string().optional()),
         items: z.array(
@@ -266,6 +286,8 @@ const talks = defineCollection({
         // Mode A (rich) only:
         hero_image: z.preprocess(ensureRelativePrefix, image().optional()),
         hero_image_alt: z.preprocess(emptyToUndef, z.string().optional()),
+        // Rich mode: the talk itself. PDF mode: optional extras (videos,
+        // handouts) rendered beneath the embedded PDF.
         body: z.array(block).optional(),
         // SEO/OG override:
         og_image: z.preprocess(ensureRelativePrefix, image().optional()),
