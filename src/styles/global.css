@@ -2011,6 +2011,19 @@ video {
   height: 1px;
   background: var(--accent);
 }
+.talk-body li a,
+.talk-body .list-intro a,
+.talk-body blockquote a {
+  color: var(--accent-deep);
+  border-bottom: 1px solid var(--accent-light);
+  transition: border-color 0.2s;
+  overflow-wrap: anywhere;
+}
+.talk-body li a:hover,
+.talk-body .list-intro a:hover,
+.talk-body blockquote a:hover {
+  border-bottom-color: var(--accent-deep);
+}
 .talk-body ul.nested {
   margin-left: 24px;
   margin-top: 8px;

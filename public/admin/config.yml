@@ -459,7 +459,7 @@ collections:
                       label: 'Text',
                       name: text,
                       widget: string,
-                      hint: 'Wrap words in *asterisks* for italic emphasis.',
+                      hint: 'Wrap words in *asterisks* for italic emphasis. For a link, type [link text](https://address).',
                     }
                   - label: 'Sub-items (optional)'
                     name: nested
